@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MEMORIA — фотостудия</title>
+  <meta name="description" content="Фотостудия MEMORIA: портретные, семейные, love story и fashion-съёмки. Оставьте заявку на фотосессию онлайн.">
+  <meta name="theme-color" content="#e8ecf0">
+  <meta property="og:title" content="MEMORIA — фотостудия">
+  <meta property="og:description" content="Сохраним ваши воспоминания. Запись на фотосессию онлайн.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-booting">
+
+  <!-- Загрузочный экран -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot__inner">
+      <svg class="boot__logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
+      <pre class="boot__log" id="bootLog"></pre>
+      <div class="boot__bar"><span id="bootBar"></span></div>
+      <div class="boot__meta"><span>MEMORIA OS v3.1</span><span id="bootPct">0%</span></div>
+    </div>
+    <button class="boot__skip" id="bootSkip" type="button">Пропустить ›</button>
+  </div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="0 0 64 64">
+      <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      <path d="M32 14 45 21.5 32 29 19 21.5Z" fill="currentColor" opacity=".9"/>
+      <path d="M19 25.5 30 32v13l-11-6.5Z" fill="currentColor" opacity=".55"/>
+      <path d="M45 25.5 34 32v13l11-6.5Z" fill="currentColor" opacity=".3"/>
+    </symbol>
+  </svg>
+
+  <canvas class="bg-canvas" id="bg" aria-hidden="true"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#top" aria-label="MEMORIA — на главную">
+        <svg class="brand__logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
+        <span class="brand__name">MEMORIA</span>
+        <span class="brand__sub mono">photo&nbsp;studio</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <a href="#services">Секвенции</a>
+        <a href="#gallery">Архив</a>
+        <a href="#process">Протокол</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#contacts">Контакты</a>
+        <a class="btn btn--sm nav__cta" href="#booking">Записаться</a>
+      </nav>
+      <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <aside class="sync" aria-hidden="true">
+    <span class="sync__label mono">Синхронизация</span>
+    <span class="sync__track"><span class="sync__fill" id="syncFill"></span></span>
+    <span class="sync__value mono" id="syncValue">0%</span>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <p class="mono tag reveal">// Последовательность 01 — Начало</p>
+          <h1 class="hero__title reveal">
+            <span class="glitch" data-text="MEMORIA">MEMORIA</span>
+          </h1>
+          <p class="hero__lead reveal">Фотостудия, в которой каждый кадр становится воспоминанием, к&nbsp;которому хочется возвращаться снова и&nbsp;снова.</p>
+          <p class="mono typed reveal" aria-live="off"><span id="typed"></span><span class="caret"></span></p>
+          <div class="hero__actions reveal">
+            <a class="btn" href="#booking">Оставить заявку</a>
+            <a class="btn btn--ghost" href="#gallery">Открыть архив</a>
+          </div>
+          <dl class="stats reveal">
+            <div><dt class="mono">Сессий</dt><dd data-count="1240">0</dd></div>
+            <div><dt class="mono">Лет опыта</dt><dd data-count="8">0</dd></div>
+            <div><dt class="mono">Залов</dt><dd data-count="3">0</dd></div>
+            <div><dt class="mono">Часов до выдачи</dt><dd data-count="72">0</dd></div>
+          </dl>
+        </div>
+
+        <div class="hero__visual reveal">
+          <div class="frame hud">
+            <canvas id="helix" aria-hidden="true"></canvas>
+            <div class="frame__label frame__label--tl mono">Субъект: <b>вы</b></div>
+            <div class="frame__label frame__label--tr mono">ДНК&nbsp;//&nbsp;<span id="dnaCode">A7-C3</span></div>
+            <div class="frame__label frame__label--bl mono">Генетическая память<br><b class="ok">стабильна</b></div>
+            <div class="frame__label frame__label--br mono">ISO 100<br>f/1.8 · 1/200</div>
+          </div>
+        </div>
+      </div>
+      <a class="scroll-hint mono" href="#services">Прокрутите, чтобы синхронизироваться <span>↓</span></a>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section" id="services">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="mono tag">// 02 · Секвенции памяти</p>
+          <h2>Выберите воспоминание</h2>
+          <p class="section-head__lead">Каждая съёмка — отдельная секвенция со своим светом, атмосферой и&nbsp;историей. Не нашли нужную? Опишите идею в&nbsp;заявке — соберём сценарий под вас.</p>
+        </header>
+
+        <div class="cards">
+          <article class="card reveal">
+            <span class="card__num mono">SEQ-01</span>
+            <h3>Портрет</h3>
+            <p>Индивидуальная съёмка с работой над позированием и светом. Для себя, для резюме, для соцсетей.</p>
+            <ul class="card__meta mono"><li>1 час</li><li>от 4 900 ₽</li></ul>
+            <button class="card__cta" type="button" data-service="Портрет">Выбрать ›</button>
+          </article>
+          <article class="card reveal">
+            <span class="card__num mono">SEQ-02</span>
+            <h3>Love story</h3>
+            <p>История двоих: нежные кадры в студии или на выезде. Помогаем расслабиться даже тем, кто стесняется камеры.</p>
+            <ul class="card__meta mono"><li>1,5 часа</li><li>от 7 900 ₽</li></ul>
+            <button class="card__cta" type="button" data-service="Love story">Выбрать ›</button>
+          </article>
+          <article class="card reveal">
+            <span class="card__num mono">SEQ-03</span>
+            <h3>Семейная</h3>
+            <p>Три поколения в одном кадре, дети, питомцы — живые эмоции без натянутых улыбок.</p>
+            <ul class="card__meta mono"><li>1,5 часа</li><li>от 8 900 ₽</li></ul>
+            <button class="card__cta" type="button" data-service="Семейная">Выбрать ›</button>
+          </article>
+          <article class="card reveal">
+            <span class="card__num mono">SEQ-04</span>
+            <h3>Fashion / beauty</h3>
+            <p>Съёмка с визажистом и стилистом, сложный свет, образы. Для портфолио моделей и артистов.</p>
+            <ul class="card__meta mono"><li>2 часа</li><li>от 12 900 ₽</li></ul>
+            <button class="card__cta" type="button" data-service="Fashion / beauty">Выбрать ›</button>
+          </article>
+          <article class="card reveal">
+            <span class="card__num mono">SEQ-05</span>
+            <h3>Предметная</h3>
+            <p>Товары для маркетплейсов, каталогов и соцсетей: на белом фоне, в интерьере, с моделью.</p>
+            <ul class="card__meta mono"><li>от 10 кадров</li><li>от 590 ₽/кадр</li></ul>
+            <button class="card__cta" type="button" data-service="Предметная">Выбрать ›</button>
+          </article>
+          <article class="card reveal">
+            <span class="card__num mono">SEQ-06</span>
+            <h3>Репортаж</h3>
+            <p>Мероприятия, дни рождения, корпоративы. Фиксируем моменты, которые иначе стали бы просто воспоминанием.</p>
+            <ul class="card__meta mono"><li>от 2 часов</li><li>от 4 500 ₽/ч</li></ul>
+            <button class="card__cta" type="button" data-service="Репортаж">Выбрать ›</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section section--alt" id="gallery">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="mono tag">// 03 · Архив воспоминаний</p>
+          <h2>Восстановленные фрагменты</h2>
+          <p class="section-head__lead">Наведите на фрагмент, чтобы синхронизировать цвет. Нажмите — чтобы открыть воспоминание целиком.</p>
+        </header>
+
+        <div class="filters reveal" role="group" aria-label="Фильтр архива">
+          <button class="filter is-active" type="button" data-filter="all">Все</button>
+          <button class="filter" type="button" data-filter="portrait">Портрет</button>
+          <button class="filter" type="button" data-filter="love">Love story</button>
+          <button class="filter" type="button" data-filter="family">Семья</button>
+          <button class="filter" type="button" data-filter="fashion">Fashion</button>
+        </div>
+
+        <!-- Замените src на свои фото (например, assets/gallery/01.jpg) -->
+        <div class="gallery" id="galleryGrid">
+          <figure class="shot reveal" data-cat="portrait"><img loading="lazy" src="https://picsum.photos/seed/memoria-01/600/800" width="600" height="800" alt="Портретная съёмка"><figcaption class="mono">Фрагмент 0x01 · Портрет</figcaption></figure>
+          <figure class="shot reveal" data-cat="love"><img loading="lazy" src="https://picsum.photos/seed/memoria-02/600/450" width="600" height="450" alt="Love story"><figcaption class="mono">Фрагмент 0x02 · Love story</figcaption></figure>
+          <figure class="shot reveal" data-cat="fashion"><img loading="lazy" src="https://picsum.photos/seed/memoria-03/600/760" width="600" height="760" alt="Fashion-съёмка"><figcaption class="mono">Фрагмент 0x03 · Fashion</figcaption></figure>
+          <figure class="shot reveal" data-cat="family"><img loading="lazy" src="https://picsum.photos/seed/memoria-04/600/500" width="600" height="500" alt="Семейная съёмка"><figcaption class="mono">Фрагмент 0x04 · Семья</figcaption></figure>
+          <figure class="shot reveal" data-cat="portrait"><img loading="lazy" src="https://picsum.photos/seed/memoria-05/600/700" width="600" height="700" alt="Портретная съёмка"><figcaption class="mono">Фрагмент 0x05 · Портрет</figcaption></figure>
+          <figure class="shot reveal" data-cat="love"><img loading="lazy" src="https://picsum.photos/seed/memoria-06/600/820" width="600" height="820" alt="Love story"><figcaption class="mono">Фрагмент 0x06 · Love story</figcaption></figure>
+          <figure class="shot reveal" data-cat="family"><img loading="lazy" src="https://picsum.photos/seed/memoria-07/600/460" width="600" height="460" alt="Семейная съёмка"><figcaption class="mono">Фрагмент 0x07 · Семья</figcaption></figure>
+          <figure class="shot reveal" data-cat="fashion"><img loading="lazy" src="https://picsum.photos/seed/memoria-08/600/780" width="600" height="780" alt="Fashion-съёмка"><figcaption class="mono">Фрагмент 0x08 · Fashion</figcaption></figure>
+          <figure class="shot reveal" data-cat="portrait"><img loading="lazy" src="https://picsum.photos/seed/memoria-09/600/520" width="600" height="520" alt="Портретная съёмка"><figcaption class="mono">Фрагмент 0x09 · Портрет</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="section" id="process">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="mono tag">// 04 · Протокол синхронизации</p>
+          <h2>Как проходит съёмка</h2>
+        </header>
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step__node"></span>
+            <span class="step__num mono">01</span>
+            <h3>Заявка</h3>
+            <p>Вы оставляете заявку на сайте — менеджер связывается в течение 30 минут в рабочее время.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__node"></span>
+            <span class="step__num mono">02</span>
+            <h3>Бриф</h3>
+            <p>Обсуждаем идею, подбираем зал, образы и референсы. Присылаем мудборд.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__node"></span>
+            <span class="step__num mono">03</span>
+            <h3>Съёмка</h3>
+            <p>Фотограф ведёт вас по кадрам — позировать не нужно уметь. Чай, кофе и гримёрка включены.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__node"></span>
+            <span class="step__num mono">04</span>
+            <h3>Выдача</h3>
+            <p>Через 72 часа — онлайн-галерея с отобранными кадрами в авторской обработке.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section section--alt" id="pricing">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="mono tag">// 05 · Уровни доступа</p>
+          <h2>Тарифы</h2>
+        </header>
+        <div class="plans">
+          <article class="plan reveal">
+            <p class="plan__code mono">Уровень 1</p>
+            <h3>Фрагмент</h3>
+            <p class="plan__price"><b>4 900</b> ₽</p>
+            <ul>
+              <li>1 час съёмки</li>
+              <li>1 зал на выбор</li>
+              <li>15 фото в обработке</li>
+              <li>Все исходники</li>
+            </ul>
+            <button class="btn btn--ghost btn--block" type="button" data-package="Фрагмент">Выбрать</button>
+          </article>
+          <article class="plan plan--featured reveal">
+            <p class="plan__badge mono">Оптимальная синхронизация</p>
+            <p class="plan__code mono">Уровень 2</p>
+            <h3>Секвенция</h3>
+            <p class="plan__price"><b>9 900</b> ₽</p>
+            <ul>
+              <li>2 часа съёмки</li>
+              <li>2 зала, смена образа</li>
+              <li>35 фото в обработке</li>
+              <li>Помощь стилиста с образом</li>
+              <li>Все исходники</li>
+            </ul>
+            <button class="btn btn--light btn--block" type="button" data-package="Секвенция">Выбрать</button>
+          </article>
+          <article class="plan reveal">
+            <p class="plan__code mono">Уровень 3</p>
+            <h3>Полная синхронизация</h3>
+            <p class="plan__price"><b>19 900</b> ₽</p>
+            <ul>
+              <li>3 часа съёмки</li>
+              <li>Все залы студии</li>
+              <li>60 фото в обработке</li>
+              <li>Визажист и стилист</li>
+              <li>Бэкстейдж-видео</li>
+            </ul>
+            <button class="btn btn--ghost btn--block" type="button" data-package="Полная синхронизация">Выбрать</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKING -->
+    <section class="section booking" id="booking">
+      <div class="container booking__grid">
+        <div class="booking__intro reveal">
+          <p class="mono tag">// 06 · Запрос на синхронизацию</p>
+          <h2>Запишитесь на&nbsp;фотосессию</h2>
+          <p>Заполните форму — мы подтвердим дату и время, ответим на вопросы и поможем подготовиться к съёмке. Предоплата не нужна до подтверждения.</p>
+          <ul class="checklist mono">
+            <li>Ответ в течение 30 минут</li>
+            <li>Бесплатный перенос за 24 часа</li>
+            <li>Подбор образов и референсов</li>
+          </ul>
+        </div>
+
+        <div class="panel hud reveal">
+          <form class="form" id="bookingForm" novalidate>
+            <fieldset class="field field--full" data-field="service">
+              <legend class="field__label mono">Секвенция <i>*</i></legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="service" value="Портрет" required><span>Портрет</span></label>
+                <label class="chip"><input type="radio" name="service" value="Love story"><span>Love story</span></label>
+                <label class="chip"><input type="radio" name="service" value="Семейная"><span>Семейная</span></label>
+                <label class="chip"><input type="radio" name="service" value="Fashion / beauty"><span>Fashion / beauty</span></label>
+                <label class="chip"><input type="radio" name="service" value="Предметная"><span>Предметная</span></label>
+                <label class="chip"><input type="radio" name="service" value="Репортаж"><span>Репортаж</span></label>
+              </div>
+              <p class="field__error mono" aria-live="polite"></p>
+            </fieldset>
+
+            <div class="field" data-field="package">
+              <label class="field__label mono" for="f-package">Тариф</label>
+              <select id="f-package" name="package">
+                <option value="Помогите выбрать">Помогите выбрать</option>
+                <option value="Фрагмент">Фрагмент — 4 900 ₽</option>
+                <option value="Секвенция">Секвенция — 9 900 ₽</option>
+                <option value="Полная синхронизация">Полная синхронизация — 19 900 ₽</option>
+              </select>
+            </div>
+
+            <div class="field" data-field="people">
+              <label class="field__label mono" for="f-people">Участников</label>
+              <select id="f-people" name="people">
+                <option>1</option>
+                <option>2</option>
+                <option>3–4</option>
+                <option>5 и больше</option>
+              </select>
+            </div>
+
+            <div class="field" data-field="date">
+              <label class="field__label mono" for="f-date">Дата <i>*</i></label>
+              <input id="f-date" name="date" type="date" required>
+              <p class="field__error mono" aria-live="polite"></p>
+            </div>
+
+            <div class="field" data-field="time">
+              <label class="field__label mono" for="f-time">Время</label>
+              <select id="f-time" name="time">
+                <option value="Любое">Любое</option>
+              </select>
+            </div>
+
+            <div class="field" data-field="name">
+              <label class="field__label mono" for="f-name">Имя <i>*</i></label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required>
+              <p class="field__error mono" aria-live="polite"></p>
+            </div>
+
+            <div class="field" data-field="phone">
+              <label class="field__label mono" for="f-phone">Телефон <i>*</i></label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
+              <p class="field__error mono" aria-live="polite"></p>
+            </div>
+
+            <div class="field field--full" data-field="contact">
+              <label class="field__label mono" for="f-contact">E-mail или Telegram</label>
+              <input id="f-contact" name="contact" type="text" autocomplete="email" placeholder="name@mail.ru или @username">
+              <p class="field__error mono" aria-live="polite"></p>
+            </div>
+
+            <div class="field field--full" data-field="comment">
+              <label class="field__label mono" for="f-comment">Идея съёмки</label>
+              <textarea id="f-comment" name="comment" rows="3" placeholder="Расскажите, какое воспоминание хотите сохранить"></textarea>
+            </div>
+
+            <!-- ловушка для ботов -->
+            <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div class="field field--full" data-field="consent">
+              <label class="check">
+                <input type="checkbox" name="consent" required>
+                <span class="check__box"></span>
+                <span>Согласен(на) на обработку персональных данных для связи со мной</span>
+              </label>
+              <p class="field__error mono" aria-live="polite"></p>
+            </div>
+
+            <div class="field--full form__footer">
+              <button class="btn btn--submit" id="submitBtn" type="submit">
+                <span class="btn__text">Начать синхронизацию</span>
+                <span class="btn__progress" aria-hidden="true"></span>
+              </button>
+              <p class="form__note mono">* — обязательные поля</p>
+            </div>
+          </form>
+
+          <div class="result" id="result" hidden>
+            <svg class="result__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
+            <p class="mono tag">Синхронизация: 100%</p>
+            <h3>Воспоминание сохранено</h3>
+            <p id="resultText">Мы свяжемся с вами в ближайшее время, чтобы подтвердить запись.</p>
+            <dl class="result__summary mono" id="resultSummary"></dl>
+            <button class="btn btn--ghost" type="button" id="resetBtn">Новая заявка</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section class="section section--alt" id="contacts">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="mono tag">// 07 · Координаты</p>
+          <h2>Где нас найти</h2>
+        </header>
+        <div class="contacts">
+          <div class="contact hud reveal">
+            <p class="mono tag">Адрес</p>
+            <p>г. Москва, ул. Примерная, 17, этаж 4</p>
+            <p class="mono coords">55.7512° N · 37.6184° E</p>
+          </div>
+          <div class="contact hud reveal">
+            <p class="mono tag">Связь</p>
+            <p><a href="tel:+70000000000">+7 (000) 000-00-00</a></p>
+            <p><a href="mailto:hello@example.com">hello@example.com</a></p>
+          </div>
+          <div class="contact hud reveal">
+            <p class="mono tag">Режим работы</p>
+            <p>Ежедневно, 10:00 — 21:00</p>
+            <p class="mono coords">Съёмки по записи</p>
+          </div>
+          <div class="contact hud reveal">
+            <p class="mono tag">Соцсети</p>
+            <p><a href="https://t.me/" target="_blank" rel="noopener">Telegram</a> · <a href="https://vk.com/" target="_blank" rel="noopener">VK</a></p>
+            <p class="mono coords">@memoria.studio</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="brand brand--footer">
+        <svg class="brand__logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
+        <span class="brand__name">MEMORIA</span>
+      </span>
+      <p class="mono">© <span id="year"></span> MEMORIA photo studio</p>
+      <p class="footer__note">Визуальный стиль вдохновлён интерфейсом Animus из серии игр Assassin’s Creed. Сайт не связан с Ubisoft.</p>
+    </div>
+  </footer>
+
+  <!-- Лайтбокс -->
+  <dialog class="lightbox" id="lightbox" aria-label="Просмотр фотографии">
+    <div class="lightbox__frame hud">
+      <img id="lbImg" alt="">
+      <p class="lightbox__caption mono" id="lbCaption"></p>
+    </div>
+    <button class="lightbox__btn lightbox__btn--prev" type="button" data-lb="prev" aria-label="Предыдущее фото">‹</button>
+    <button class="lightbox__btn lightbox__btn--next" type="button" data-lb="next" aria-label="Следующее фото">›</button>
+    <button class="lightbox__close mono" type="button" data-lb="close" aria-label="Закрыть">Закрыть ✕</button>
+  </dialog>
+
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

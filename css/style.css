@@ -1284,3 +1284,13 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; filter: none; }
 }
+
+/* ---- Карточки галерей на главной ---- */
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.gcard{position:relative;display:block;aspect-ratio:3/4;overflow:hidden;color:#fff;text-decoration:none;background:#111}
+.gcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gcard:hover img{transform:scale(1.05)}
+.gcard:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.75))}
+.gcard__t,.gcard__m{position:absolute;left:16px;right:16px;z-index:1}
+.gcard__t{bottom:38px;font-size:20px}
+.gcard__m{bottom:16px;font-size:12px;opacity:.8}

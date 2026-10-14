@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Админка портфолио</title>
+<style>
+body{margin:0;font:15px system-ui,sans-serif;background:#f6f6f4;color:#111;display:flex;min-height:100vh}
+aside{width:260px;background:#fff;border-right:1px solid #ddd;padding:16px;box-sizing:border-box;flex:none}
+main{flex:1;padding:24px;min-width:0}
+button,input{font:inherit}
+button{padding:8px 14px;border:1px solid #111;background:#fff;border-radius:6px;cursor:pointer}
+button.p{background:#111;color:#fff}
+.g{padding:9px;border-radius:6px;cursor:pointer;margin-top:4px}.g:hover,.g.on{background:#eee}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+.bar input[type=text]{min-width:240px;padding:8px}
+h3{margin:24px 0 0}h3 small{color:#888;font-weight:400}h3 a{font-size:13px;font-weight:400;color:#06c;cursor:pointer;margin-left:10px}
+.zone{border:2px dashed #bbb;border-radius:10px;padding:14px;margin-top:8px}.zone.over{border-color:#111;background:#fff}
+.st{margin-top:6px;color:#555}
+.ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:10px}
+.ph div{position:relative}.ph img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;display:block}
+.ph b,.ph i{position:absolute;top:4px;background:#fff;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;cursor:pointer;font-style:normal;font-weight:400}
+.ph b{right:4px}.ph i{left:4px}
+#top{position:fixed;right:20px;bottom:20px}
+</style></head><body>
+<aside><b>Галереи</b><div id="side"></div><p><button class="p" id="ng">+ Новая галерея</button></p></aside>
+<main id="main"></main>
+<button class="p" id="top">Опубликовать на сайт</button>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let d={galleries:[]},cur=null;
+async function api(n,b){const r=await fetch('/api/'+n,{method:'POST',body:JSON.stringify(b||{})});const j=await r.json();if(!r.ok)throw new Error(j.error);return j}
+async function act(n,b){try{d=await api(n,b);render()}catch(e){alert(e.message)}}
+async function reload(){d=await(await fetch('/api/data')).json();render()}
+function render(){
+ if(!d.galleries.find(g=>g.slug==cur))cur=d.galleries[0]&&d.galleries[0].slug;
+ $('#side').innerHTML=d.galleries.map(g=>`<div class="g${g.slug==cur?' on':''}" data-s="${g.slug}">${esc(g.title)}${g.hidden?' 🔒':''}</div>`).join('');
+ const g=d.galleries.find(x=>x.slug==cur);
+ if(!g){$('#main').innerHTML='<p>Создайте первую галерею слева.</p>';return}
+ $('#main').innerHTML=`<div class="bar"><input type="text" id="t" value="${esc(g.title)}"><input type="date" id="dt" value="${g.date}">
+ <label><input type="checkbox" id="h" ${g.hidden?'checked':''}> скрытая (не видна на главной, только по ссылке)</label>
+ <button id="sv">Сохранить</button><button id="cp">Копировать ссылку</button><button id="dg">Удалить галерею</button></div>`+
+ g.folders.map(f=>`<section data-f="${f.id}"><h3>${esc(f.name)} <small>${f.photos.length} фото</small><a data-r>переименовать</a><a data-x>удалить папку</a></h3>
+ <div class="zone">Перетащите фото сюда или <input type="file" multiple accept="image/*"><div class="st"></div></div>
+ <div class="ph">${f.photos.map(p=>{const t=`photos/${g.slug}/${f.id}/thumb/${p}`;return `<div data-p="${p}"><img src="/${t}" loading="lazy"><b data-del title="Удалить">✕</b><i data-cov title="Сделать обложкой">${g.cover==t?'★':'☆'}</i></div>`}).join('')}</div></section>`).join('')+
+ `<p><button id="nf">+ Папка</button></p>`;
+}
+async function up(slug,fid,files,st){
+ files=[...files].filter(f=>f.type.startsWith('image/'));let i=0;
+ for(const f of files){st.textContent=`Загрузка ${++i}/${files.length}: ${f.name}`;
+  const r=await fetch(`/api/upload?slug=${slug}&fid=${fid}&name=${encodeURIComponent(f.name)}`,{method:'POST',body:f});
+  if(!r.ok){alert((await r.json()).error);break}}
+ reload();
+}
+document.addEventListener('click',async e=>{
+ const t=e.target,sec=t.closest('section'),fid=sec&&sec.dataset.f;
+ if(t.closest('.g')){cur=t.closest('.g').dataset.s;render()}
+ else if(t.id=='ng'){const title=prompt('Название галереи');if(title){await act('gallery',{title,date:new Date().toISOString().slice(0,10)});cur=d.galleries[0].slug;render()}}
+ else if(t.id=='sv')act('update',{slug:cur,title:$('#t').value,date:$('#dt').value,hidden:$('#h').checked});
+ else if(t.id=='dg'){if(confirm('Удалить галерею вместе со всеми фото?'))act('delete_gallery',{slug:cur})}
+ else if(t.id=='cp'){let b=localStorage.base||prompt('Адрес сайта, например https://ник.github.io/memoria-studio/');if(!b)return;if(!b.endsWith('/'))b+='/';localStorage.base=b;
+  await navigator.clipboard.writeText(`${b}gallery.html?g=${cur}`);alert('Ссылка скопирована')}
+ else if(t.id=='nf'){const name=prompt('Название папки');if(name)act('folder',{slug:cur,name})}
+ else if(t.dataset.r!==undefined){const name=prompt('Новое название');if(name)act('rename_folder',{slug:cur,fid,name})}
+ else if(t.dataset.x!==undefined){if(confirm('Удалить папку со всеми фото?'))act('delete_folder',{slug:cur,fid})}
+ else if(t.dataset.del!==undefined){if(confirm('Удалить это фото?'))act('delete_photo',{slug:cur,fid,file:t.parentNode.dataset.p})}
+ else if(t.dataset.cov!==undefined)act('update',{slug:cur,cover:`photos/${cur}/${fid}/thumb/${t.parentNode.dataset.p}`});
+ else if(t.id=='top'){t.textContent='Публикуем…';try{const r=await api('publish');alert(r.log||'Готово')}catch(x){alert(x.message)}t.textContent='Опубликовать на сайт'}
+});
+document.addEventListener('change',e=>{if(e.target.type=='file'){const s=e.target.closest('section');up(cur,s.dataset.f,e.target.files,s.querySelector('.st'))}});
+['dragover','dragleave','drop'].forEach(n=>document.addEventListener(n,e=>{
+ e.preventDefault();const z=e.target.closest&&e.target.closest('.zone');
+ document.querySelectorAll('.zone.over').forEach(x=>x.classList.remove('over'));
+ if(!z)return;if(n=='dragover')z.classList.add('over');
+ if(n=='drop'){const s=z.closest('section');up(cur,s.dataset.f,e.dataTransfer.files,z.querySelector('.st'))}}));
+reload();
+</script></body></html>

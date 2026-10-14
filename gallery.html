@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Галерея</title><link rel="icon" href="assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111;--mut:#777;--line:#e6e6e6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font:15px Montserrat,system-ui,sans-serif;color:var(--ink);background:#fff}
+.hero{height:100vh;min-height:420px;display:flex;align-items:flex-end;justify-content:center;text-align:center;color:#fff;background:#222 center/cover;position:relative;padding:0 20px 90px}
+.hero:before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.hero>*{position:relative}
+h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500}
+h1{font-size:clamp(40px,7vw,72px);margin:.2em 0}.hero p{margin:0}
+.down{position:absolute;bottom:24px;left:50%;color:#fff;text-decoration:none;font-size:28px}
+.bar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 48px;gap:16px;flex-wrap:wrap}
+.tabs{display:flex;gap:28px;overflow-x:auto}
+.tabs a{padding:22px 0;color:var(--mut);font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer}
+.tabs a.on{color:var(--ink);border-color:var(--ink)}
+.acts{display:flex;gap:12px;align-items:center;position:relative}
+.acts button{font:inherit;background:none;border:1px solid transparent;padding:10px 16px;cursor:pointer;border-radius:6px;color:var(--ink)}
+#dl{border-color:var(--ink);font-weight:500}
+#menu{position:absolute;right:0;top:100%;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.12);border-radius:8px;padding:8px;min-width:230px}
+#menu button{display:block;width:100%;text-align:left}#menu small{display:block;color:var(--mut);font-size:12px}
+main{padding:0 48px 80px}section{padding-top:56px;scroll-margin-top:70px}
+h2{text-align:center;font-size:40px;margin:0 0 32px}
+.grid{columns:4 240px;column-gap:20px}
+.ph{position:relative;margin:0 0 20px;break-inside:avoid;cursor:zoom-in}.ph img{width:100%;display:block}
+.ph a{position:absolute;right:10px;bottom:10px;background:#fff;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;opacity:0;transition:.2s;text-decoration:none;color:#111}
+.ph:hover a{opacity:1}@media(hover:none){.ph a{opacity:1}}
+dialog{border:0;padding:0;background:#000;max-width:100vw;max-height:100vh;width:100vw;height:100vh}
+dialog img{width:100%;height:100%;object-fit:contain}
+.lb{position:absolute;color:#fff;background:none;border:0;font-size:34px;cursor:pointer;text-decoration:none}
+@media(max-width:700px){.bar,main{padding:0 16px}.grid{columns:2 140px}}
+</style></head><body>
+<header class="hero" id="hero"><div><p id="date"></p><h1 id="title"></h1><p id="by"></p></div><a class="down" href="#bar">↓</a></header>
+<nav class="bar" id="bar"><div class="tabs" id="tabs"></div>
+<div class="acts"><button id="share">Поделиться</button>
+<button id="dl">Скачать файлы ⌄</button>
+<div id="menu" hidden><button data-m="all">Весь проект<small>Все файлы и папки</small></button><button data-m="cur">Текущую папку<small id="cn"></small></button></div></div></nav>
+<main id="main"></main>
+<dialog id="lb"><img id="li" alt=""><button class="lb" data-a="p" style="left:16px;top:50%">‹</button><button class="lb" data-a="n" style="right:16px;top:50%">›</button>
+<button class="lb" data-a="c" style="right:16px;top:12px">✕</button><a class="lb" id="ld" style="right:20px;bottom:16px;font-size:24px" title="Скачать">⬇</a></dialog>
+<script src="js/config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const q=new URLSearchParams(location.search).get('g'),C=window.MEMORIA_CONFIG||{};
+let G,curF,li=0,list=[];
+const P=(f,p,k)=>`photos/${G.slug}/${f.id}/${k}/${p}`;
+fetch('data/galleries.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{G=d.galleries.find(g=>g.slug===q);if(!G)throw 0;init()}).catch(()=>{
+ $('#main').innerHTML='<p style="padding:120px 0;text-align:center">Галерея не найдена</p>';$('#hero').style.display=$('#bar').style.display='none'});
+function init(){
+ const F=G.folders=G.folders.filter(f=>f.photos.length);curF=F[0];
+ document.title=G.title;$('#title').textContent=G.title;
+ $('#date').textContent=G.date?G.date.split('-').reverse().join('.'):'';
+ $('#by').textContent=C.photographer?'Фотограф '+C.photographer:'';
+ const c=(G.cover||(F[0]&&P(F[0],F[0].photos[0],'thumb'))||'').replace('/thumb/','/full/');
+ if(c)$('#hero').style.backgroundImage=`url("${c}")`;
+ $('#tabs').innerHTML=F.map(f=>`<a data-id="${f.id}">${esc(f.name)}</a>`).join('');
+ $('#main').innerHTML=F.map(f=>`<section id="s-${f.id}"><h2>${esc(f.name)}</h2><div class="grid">`+
+  f.photos.map((p,i)=>`<figure class="ph" data-f="${f.id}" data-i="${i}"><img loading="lazy" src="${P(f,p,'thumb')}" alt=""><a href="${P(f,p,'full')}" download="${p}" title="Скачать">⬇</a></figure>`).join('')+`</div></section>`).join('');
+ setCur(curF);
+}
+function setCur(f){curF=f;$('#cn').textContent=f.name;document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.id===f.id))}
+$('#tabs').onclick=e=>{const id=e.target.dataset.id;if(id)$('#s-'+id).scrollIntoView()};
+addEventListener('scroll',()=>{if(!G)return;let f=G.folders[0];for(const x of G.folders)if($('#s-'+x.id).getBoundingClientRect().top<140)f=x;if(f!==curF)setCur(f)},{passive:true});
+$('#share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#share').textContent='Ссылка скопирована'}catch(e){prompt('Ссылка',location.href)}setTimeout(()=>$('#share').textContent='Поделиться',1800)};
+$('#dl').onclick=e=>{e.stopPropagation();$('#menu').hidden=!$('#menu').hidden};
+document.addEventListener('click',()=>$('#menu').hidden=true);
+$('#menu').onclick=async e=>{const m=e.target.closest('button')?.dataset.m;if(!m)return;
+ const fs=m==='all'?G.folders:[curF],btn=$('#dl'),n=fs.reduce((s,f)=>s+f.photos.length,0);let k=0;
+ try{const z=new JSZip();
+  for(const f of fs){const dir=fs.length>1?z.folder(f.name):z;
+   for(const p of f.photos){dir.file(p,await(await fetch(P(f,p,'full'))).blob());btn.textContent=`Архив ${++k}/${n}`}}
+  const b=await z.generateAsync({type:'blob',compression:'STORE'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download=(m==='all'?G.slug:G.slug+'-'+curF.name)+'.zip';a.click();
+ }catch(err){alert('Не удалось собрать архив')}
+ btn.textContent='Скачать файлы ⌄'};
+const lb=$('#lb');
+function show(i){li=(i+list.length)%list.length;const x=list[li],u=P(x.f,x.p,'full');$('#li').src=u;$('#ld').href=u;$('#ld').download=x.p}
+$('#main').onclick=e=>{if(e.target.closest('a'))return;const fig=e.target.closest('.ph');if(!fig)return;
+ const f=G.folders.find(x=>x.id===fig.dataset.f);list=f.photos.map(p=>({f,p}));show(+fig.dataset.i);lb.showModal()};
+lb.onclick=e=>{const a=e.target.dataset.a;if(a==='p')show(li-1);else if(a==='n')show(li+1);else if(a==='c'||e.target===lb)lb.close()};
+lb.onkeydown=e=>{if(e.key==='ArrowLeft')show(li-1);if(e.key==='ArrowRight')show(li+1)};
+</script></body></html>

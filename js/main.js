@@ -760,8 +760,6 @@
   initBackground();
   initHelix();
   initScroll();
-  initGallery();
-  initForm();
   initTyped();
   runBoot(() => {
     initReveal();

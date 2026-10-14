@@ -1,5 +1,5 @@
 /* =========================================================
-   MEMORIA — фотостудия. Стиль вдохновлён интерфейсом Animus.
+   Plёnka Studio. Стиль вдохновлён интерфейсом Animus.
    ========================================================= */
 
 :root {
@@ -1294,3 +1294,14 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
 .gcard__t,.gcard__m{position:absolute;left:16px;right:16px;z-index:1}
 .gcard__t{bottom:38px;font-size:20px}
 .gcard__m{bottom:16px;font-size:12px;opacity:.8}
+
+.hero__sub { font-weight: 200; opacity: .55; letter-spacing: .04em; }
+
+/* ---------- Главный экран на всю ширину ---------- */
+.hero > .container { max-width: min(1680px, 94vw); }
+@media (min-width: 961px) { .hero__grid { grid-template-columns: 1.1fr 1fr; } }
+.hero__title { font-size: clamp(3.2rem, 9.5vw, 11rem); }
+.hero__lead { max-width: 40ch; font-size: clamp(1.1rem, 1.5vw, 1.6rem); }
+.hero .frame { max-width: none; width: min(100%, calc(76svh * .8)); }
+.stats { grid-template-columns: repeat(3, auto); }
+@media (max-width: 960px) { .hero .frame { width: 100%; } }

@@ -141,6 +141,16 @@ section.f{margin-top:26px;animation:up .5s var(--ease) both}
 .empty{padding:80px 0;text-align:center;color:var(--muted)}
 .empty h2{font-weight:200;font-size:36px;color:var(--ink);margin:10px 0}
 
+/* обложка и точка фокуса */
+.covbox{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.covbox .mono{color:var(--muted);display:block;margin-bottom:6px}
+.cfull{position:relative;display:inline-block;cursor:crosshair;line-height:0}
+.cfull img{max-height:240px;max-width:320px;display:block}
+.cfull .dot{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:2px solid var(--accent-2);border-radius:50%;box-shadow:0 0 0 2px rgba(21,32,43,.5),0 0 14px var(--accent-2);pointer-events:none;transition:left .3s var(--ease),top .3s var(--ease)}
+.cfull .dot:after{content:"";position:absolute;inset:9px;background:var(--accent-2);border-radius:50%}
+.ccrop{width:150px;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--line-2);line-height:0}
+.ccrop img{width:100%;height:100%;object-fit:cover;transition:object-position .35s var(--ease)}
+.chint{max-width:240px;color:var(--ink-2);font-size:.9rem}
 /* модалка и тосты */
 #modal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(21,32,43,.35);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
 #modal.on{opacity:1;visibility:visible}
@@ -227,8 +237,11 @@ function render(){
  <div class="card corner"><div class="form">
   <label class="fld"><span class="mono">Название</span><input type="text" id="t" value="${esc(g.title)}"></label>
   <label class="fld"><span class="mono">Дата</span><input type="date" id="dt" value="${g.date}"></label>
-  <label class="sw"><input type="checkbox" id="h" ${g.hidden?'checked':''}><i></i><span>Скрытая <span class="mono" style="color:var(--muted)">только по ссылке</span></span></label>
- </div><div class="acts"><button class="btn btn--p" id="sv">Сохранить</button><button class="btn" id="cp">Копировать ссылку</button><button class="btn" id="nf">+ Папка</button><button class="btn btn--d" id="dg">Удалить галерею</button></div></div></div>`+
+  <label class="sw"><input type="checkbox" id="h" ${g.hidden?'checked':''}><i></i><span>Скрытая <span class="mono" style="color:var(--muted)">только по ссылке · можно скачивать</span></span></label>
+ </div><div class="acts"><button class="btn btn--p" id="sv">Сохранить</button><button class="btn" id="cp">Копировать ссылку</button><button class="btn" id="nf">+ Папка</button><button class="btn btn--d" id="dg">Удалить галерею</button></div>
+ ${g.cover?`<div class="covbox"><div><span class="mono">Обложка · кликни по лицу</span><div class="cfull" id="cfull"><img src="/${g.cover}" alt=""><span class="dot" style="left:${(g.focus||'50% 50%').split(' ')[0]};top:${(g.focus||'50% 50%').split(' ')[1]}"></span></div></div>
+ <div><span class="mono">Так увидят на сайте</span><div class="ccrop"><img src="/${g.cover}" alt="" style="object-position:${g.focus||'50% 50%'}"></div></div>
+ <p class="chint">Обложку выбираешь звёздочкой ☆ на любом фото ниже. Потом кликни по лицу на картинке слева — превью на главной и фон галереи будут центрироваться по этой точке.</p></div>`:''}</div></div>`+
  g.folders.map((f,fi)=>`<section class="f" data-f="${f.id}" style="animation-delay:${80+fi*60}ms"><div class="f__h"><h3>${esc(f.name)}</h3><span class="mono">${pad(f.photos.length)} фото</span><a data-r>переименовать</a><a class="del" data-x>удалить папку</a></div>
   <div class="zone"><div>Перетащите фото сюда или <label>выберите файлы<input type="file" multiple accept="image/*"></label></div><span class="mono">jpg · png · webp — оригиналы сохраняются как есть</span>
   <div class="prog"><i></i></div><div class="st"></div></div>
@@ -247,7 +260,11 @@ async function up(slug,fid,files,zone){
 
 document.addEventListener('click',async e=>{
  const t=e.target,sec=t.closest('section'),fid=sec&&sec.dataset.f;
- if(t.closest('.g')){cur=t.closest('.g').dataset.s;render()}
+ if(t.closest('#cfull')){const img=$('#cfull img'),r=img.getBoundingClientRect();
+  const x=Math.round(Math.min(100,Math.max(0,(e.clientX-r.left)/r.width*100))),y=Math.round(Math.min(100,Math.max(0,(e.clientY-r.top)/r.height*100)));
+  const f=`${x}% ${y}%`;$('#cfull .dot').style.left=x+'%';$('#cfull .dot').style.top=y+'%';$('.ccrop img').style.objectPosition=f;
+  try{d=await api('update',{slug:cur,focus:f});toast('Центр обложки сохранён')}catch(x){toast(x.message,true)}}
+ else if(t.closest('.g')){cur=t.closest('.g').dataset.s;render()}
  else if(t.id=='ng'||t.id=='ng2'){const title=await modal({title:'Новая галерея',text:'Название съёмки',input:'',ok:'Создать'});
   if(title){await act('gallery',{title,date:new Date().toISOString().slice(0,10)},'Галерея создана');cur=d.galleries[0].slug;render()}}
  else if(t.id=='sv')act('update',{slug:cur,title:$('#t').value,date:$('#dt').value,hidden:$('#h').checked},'Сохранено');
@@ -258,7 +275,7 @@ document.addEventListener('click',async e=>{
  else if(t.dataset.x!==undefined){if(await modal({title:'Удаление',text:'Удалить папку со всеми фото?',ok:'Удалить',danger:1}))act('delete_folder',{slug:cur,fid},'Папка удалена')}
  else if(t.dataset.del!==undefined){if(await modal({title:'Удаление',text:'Удалить это фото?',ok:'Удалить',danger:1})){const card=t.parentNode;card.classList.add('out');
   setTimeout(()=>act('delete_photo',{slug:cur,fid,file:card.dataset.p}),300)}}
- else if(t.dataset.cov!==undefined)act('update',{slug:cur,cover:`photos/${cur}/${fid}/thumb/${t.parentNode.dataset.p}`},'Обложка обновлена');
+ else if(t.dataset.cov!==undefined)act('update',{slug:cur,cover:`photos/${cur}/${fid}/thumb/${t.parentNode.dataset.p}`,focus:'50% 30%'},'Обложка обновлена — кликни по лицу, чтобы отцентровать');
  else if(t.closest('#top')){const b=$('#top');b.textContent='Публикуем…';
   try{const r=await api('publish');await modal({title:'Публикация',text:r.log||'Готово',cancel:'',ok:'Понятно'})}catch(x){toast(x.message,true)}
   b.textContent='⇪ Опубликовать на сайт'}

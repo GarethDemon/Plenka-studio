@@ -35,10 +35,10 @@
     const bar = $('#bootBar');
     const pct = $('#bootPct');
     const lines = [
-      '> Инициализация ядра MEMORIA… <b>OK</b>',
-      '> Загрузка генетической памяти субъекта…',
+      '> Инициализация ядра PLЁNKA… <b>OK</b>',
+      '> Загрузка архива кадров…',
       '> Калибровка объектива f/1.4 … <b>OK</b>',
-      '> Восстановление фрагментов: 1 240 … <b>OK</b>',
+      '> Восстановление фрагментов … <b>OK</b>',
       '> Настройка студийного света … <b>OK</b>',
       '> Синхронизация с воспоминанием…',
     ];
@@ -130,7 +130,7 @@
       '> Портрет, который расскажет о вас больше слов',
       '> Love story — история двоих в одном кадре',
       '> Семейный архив для следующих поколений',
-      '> Fashion-съёмка с командой визажистов',
+      '> Портрет, fashion и beauty — в одном жанре',
     ];
     if (reducedMotion) { el.textContent = phrases[0]; return; }
 
@@ -263,143 +263,153 @@
     loop();
   }
 
-  /* ---------------- Спираль ДНК ---------------- */
+  /* ---------------- Диафрагма объектива ---------------- */
 
-  function initHelix() {
+  function initAperture() {
     const canvas = $('#helix');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const glyphs = [];
-    let w = 0;
-    let h = 0;
-    let t = 0;
-    let raf = 0;
-    let visible = true;
-    let highlight = 7;
+    const fEl = $('#fstop');
+    const frameEl = $('#frameNo');
+    const STOPS = [1.4, 2, 2.8, 4, 5.6, 8, 11, 16];
+    const N = 8;
+    let w = 0, h = 0, t = 0, visible = true, shot = 0, flash = 0;
 
     const resize = () => {
-      const rect = canvas.getBoundingClientRect();
+      const r = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = rect.width;
-      h = rect.height;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
+      w = r.width; h = r.height;
+      canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    // точка выхода луча из (x,y) в направлении (dx,dy) на окружность радиуса R
+    const hit = (x, y, dx, dy, R) => {
+      const b = x * dx + y * dy, c = x * x + y * y - R * R;
+      const s = -b + Math.sqrt(Math.max(0, b * b - c));
+      return [x + dx * s, y + dy * s];
     };
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
-      const n = 24;
-      const top = h * 0.13;
-      const bottom = h * 0.87;
-      const step = (bottom - top) / (n - 1);
-      const cx = w / 2;
-      const amp = Math.min(w * 0.2, 100);
+      const cx = w / 2, cy = h / 2;
+      const R = Math.min(w, h) * 0.34;
+      // плавно «дышит» между f/1.4 и f/16, иногда щёлкает затвором
+      const open = 0.5 + 0.5 * Math.sin(t * 0.55);
+      const r = R * (0.16 + 0.7 * open);
+      const rot = t * 0.08 + open * 0.9;
 
-      // Сканирующая линия
-      const sy = (t * 70) % (h + 80) - 40;
-      const grad = ctx.createLinearGradient(0, sy - 40, 0, sy);
-      grad.addColorStop(0, 'rgba(111,208,238,0)');
-      grad.addColorStop(1, 'rgba(111,208,238,.22)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, sy - 40, w, 40);
-      ctx.fillStyle = 'rgba(26,156,198,.5)';
-      ctx.fillRect(0, sy, w, 1);
-
-      const points = [];
-      for (let i = 0; i < n; i++) {
-        const y = top + i * step;
-        const ph = t + i * 0.42;
-        const s = Math.sin(ph);
-        const c = Math.cos(ph);
-        points.push({ y, x1: cx + s * amp, x2: cx - s * amp, z1: c, z2: -c, i });
-      }
-
-      // Перемычки
-      for (const p of points) {
-        const g = ctx.createLinearGradient(p.x1, 0, p.x2, 0);
-        g.addColorStop(0, `rgba(26,156,198,${0.15 + 0.25 * (p.z1 + 1) / 2})`);
-        g.addColorStop(1, `rgba(21,32,43,${0.08 + 0.2 * (p.z2 + 1) / 2})`);
-        ctx.strokeStyle = g;
-        ctx.lineWidth = 1;
+      // внешние кольца и шкала фокуса
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(21,32,43,.18)';
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.32, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.08, 0, Math.PI * 2); ctx.stroke();
+      for (let i = 0; i < 72; i++) {
+        const a = i / 72 * Math.PI * 2 - t * 0.12;
+        const long = i % 6 === 0;
+        const r1 = R * 1.1, r2 = R * (long ? 1.22 : 1.16);
+        ctx.strokeStyle = i % 18 === 0 ? 'rgba(26,156,198,.9)' : 'rgba(21,32,43,.28)';
         ctx.beginPath();
-        ctx.moveTo(p.x1, p.y);
-        ctx.lineTo(p.x2, p.y);
+        ctx.moveTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+        ctx.lineTo(cx + Math.cos(a) * r2, cy + Math.sin(a) * r2);
         ctx.stroke();
       }
+      // бегущая дуга
+      ctx.strokeStyle = 'rgba(26,156,198,.75)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.32, t * 0.7, t * 0.7 + 0.9); ctx.stroke();
+      ctx.lineWidth = 1;
 
-      // Нити
-      const strand = (key, zKey, color) => {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        points.forEach((p, k) => (k ? ctx.lineTo(p[key], p.y) : ctx.moveTo(p[key], p.y)));
-        ctx.stroke();
-        for (const p of points) {
-          const z = (p[zKey] + 1) / 2;
-          const r = 1.8 + z * 3.2;
-          const isHi = p.i === highlight && key === 'x1';
-          ctx.fillStyle = isHi ? '#d2393c' : color.replace(/[\d.]+\)$/, `${0.35 + z * 0.65})`);
-          ctx.beginPath();
-          ctx.arc(p[key], p.y, r, 0, Math.PI * 2);
-          ctx.fill();
-          if (isHi) {
-            ctx.strokeStyle = 'rgba(210,57,60,.6)';
-            ctx.beginPath();
-            ctx.arc(p[key], p.y, r + 6 + Math.sin(t * 6) * 2, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.font = '600 9px "JetBrains Mono", monospace';
-            ctx.fillStyle = 'rgba(210,57,60,.85)';
-            ctx.fillText('ВОСПОМИНАНИЕ', p[key] + r + 12, p.y + 3);
-            ctx.strokeStyle = color;
-          }
-        }
-      };
-      strand('x2', 'z2', 'rgba(21,32,43,1)');
-      strand('x1', 'z1', 'rgba(26,156,198,1)');
+      // лепестки диафрагмы
+      const v = [];
+      for (let i = 0; i < N; i++) {
+        const a = rot + i / N * Math.PI * 2;
+        v.push([Math.cos(a) * r, Math.sin(a) * r]);
+      }
+      const g = ctx.createRadialGradient(cx, cy, r, cx, cy, R);
+      g.addColorStop(0, 'rgba(21,32,43,.55)');
+      g.addColorStop(1, 'rgba(21,32,43,.85)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.moveTo(cx + v[0][0], cy + v[0][1]);
+      for (let i = N - 1; i >= 0; i--) ctx.lineTo(cx + v[i][0], cy + v[i][1]);
+      ctx.closePath();
+      ctx.fill('evenodd');
+      for (let i = 0; i < N; i++) {
+        const p = v[i], q = v[(i + N - 1) % N];
+        let dx = p[0] - q[0], dy = p[1] - q[1];
+        const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+        const e = hit(p[0], p[1], dx, dy, R);
+        ctx.strokeStyle = i === 0 ? 'rgba(111,208,238,.95)' : 'rgba(232,236,240,.35)';
+        ctx.beginPath(); ctx.moveTo(cx + q[0], cy + q[1]); ctx.lineTo(cx + e[0], cy + e[1]); ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(21,32,43,.6)';
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
 
-      // Всплывающие символы
-      if (Math.random() < 0.18) {
-        glyphs.push({
-          x: rand(w * 0.08, w * 0.92), y: h * 0.9, life: 1,
-          ch: 'ACGT01'[Math.floor(Math.random() * 6)],
-        });
+      // свет в отверстии
+      const lg = ctx.createRadialGradient(cx - r * .3, cy - r * .3, 0, cx, cy, r);
+      lg.addColorStop(0, 'rgba(255,255,255,.95)');
+      lg.addColorStop(1, 'rgba(111,208,238,.18)');
+      ctx.fillStyle = lg;
+      ctx.beginPath();
+      ctx.moveTo(cx + v[0][0], cy + v[0][1]);
+      for (let i = 1; i < N; i++) ctx.lineTo(cx + v[i][0], cy + v[i][1]);
+      ctx.closePath(); ctx.fill();
+
+      // рамка фокуса и перекрестие
+      const fb = R * (0.42 + 0.04 * Math.sin(t * 3));
+      const k = fb * 0.32;
+      ctx.strokeStyle = 'rgba(26,156,198,.95)'; ctx.lineWidth = 2;
+      [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([sx, sy]) => {
+        const x = cx + sx * fb, y = cy + sy * fb;
+        ctx.beginPath(); ctx.moveTo(x, y - sy * k); ctx.lineTo(x, y); ctx.lineTo(x - sx * k, y); ctx.stroke();
+      });
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(21,32,43,.5)';
+      ctx.beginPath();
+      ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8);
+      ctx.stroke();
+
+      // сетка третей
+      ctx.strokeStyle = 'rgba(21,32,43,.07)';
+      ctx.beginPath();
+      for (let i = 1; i < 3; i++) {
+        ctx.moveTo(w * i / 3, 0); ctx.lineTo(w * i / 3, h);
+        ctx.moveTo(0, h * i / 3); ctx.lineTo(w, h * i / 3);
       }
-      ctx.font = '10px "JetBrains Mono", monospace';
-      for (let k = glyphs.length - 1; k >= 0; k--) {
-        const g = glyphs[k];
-        g.y -= 0.6;
-        g.life -= 0.006;
-        if (g.life <= 0) { glyphs.splice(k, 1); continue; }
-        ctx.fillStyle = `rgba(127,141,154,${g.life * 0.6})`;
-        ctx.fillText(g.ch, g.x, g.y);
+      ctx.stroke();
+
+      // вспышка затвора
+      if (flash > 0) {
+        ctx.fillStyle = `rgba(255,255,255,${flash})`;
+        ctx.fillRect(0, 0, w, h);
+        flash = Math.max(0, flash - 0.06);
       }
+
+      if (fEl) fEl.textContent = 'f/' + STOPS[Math.round((1 - open) * (STOPS.length - 1))];
     };
 
     const loop = () => {
-      t += 0.012;
+      t += 0.016;
+      // щелчок, когда диафрагма почти закрыта
+      const phase = Math.sin(t * 0.55);
+      if (phase < -0.995 && t - shot > 3) {
+        shot = t; flash = 0.85;
+        if (frameEl) frameEl.textContent = String(Number(frameEl.textContent) + 1).padStart(4, '0');
+      }
       draw();
-      if (visible) raf = requestAnimationFrame(loop);
+      if (visible) requestAnimationFrame(loop);
     };
 
     resize();
     new ResizeObserver(() => { resize(); if (reducedMotion) draw(); }).observe(canvas);
     if (reducedMotion) { draw(); return; }
-
     new IntersectionObserver(([e]) => {
       const was = visible;
       visible = e.isIntersecting;
       if (visible && !was) loop();
     }).observe(canvas);
-
-    setInterval(() => { highlight = Math.floor(rand(3, 21)); }, 3200);
     loop();
-
-    const code = $('#dnaCode');
-    const hex = '0123456789ABCDEF';
-    setInterval(() => {
-      const r = () => hex[Math.floor(Math.random() * 16)];
-      code.textContent = `${'ACGT'[Math.floor(Math.random() * 4)]}${r()}-${'ACGT'[Math.floor(Math.random() * 4)]}${r()}`;
-    }, 1800);
   }
 
   /* ---------------- Индикатор синхронизации и навигация ---------------- */
@@ -758,7 +768,7 @@
 
   $('#year').textContent = new Date().getFullYear();
   initBackground();
-  initHelix();
+  initAperture();
   initScroll();
   initTyped();
   runBoot(() => {

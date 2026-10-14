@@ -1307,5 +1307,25 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
 @media (max-width: 960px) { .hero .frame { width: 100%; } }
 
 /* 4 карточки услуг — без пустых ячеек */
-@media (min-width: 640px) { .cards { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1100px) { .cards { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 640px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .cards > .card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (min-width: 1100px) {
+  /* 5 карточек: три сверху, две пошире снизу */
+  .cards { grid-template-columns: repeat(6, 1fr); }
+  .cards > .card { grid-column: span 2; }
+  .cards > .card:nth-child(4), .cards > .card:nth-child(5), .cards > .card:last-child:nth-child(odd) { grid-column: span 3; }
+}
+.plans__note { margin-top: 28px; text-align: center; color: var(--muted); }
+
+/* Правила */
+.rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 0 48px;
+}
+.rule { padding: 22px 0 24px; border-top: 1px solid var(--line); position: relative; }
+.rule::before { content: ""; position: absolute; left: 0; top: -1px; width: 40px; height: 2px; background: var(--accent); }
+.rule__num { display: block; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
+.rule p { color: var(--ink-2); }

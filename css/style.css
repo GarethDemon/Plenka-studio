@@ -1329,3 +1329,5 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
 .rule::before { content: ""; position: absolute; left: 0; top: -1px; width: 40px; height: 2px; background: var(--accent); }
 .rule__num { display: block; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
 .rule p { color: var(--ink-2); }
+
+.plan__note { display: block; font-size: .78em; opacity: .65; margin-top: 2px; }

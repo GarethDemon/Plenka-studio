@@ -1,7 +1,7 @@
 """Локальная админка портфолио. Запуск: admin/start.bat (или python admin/admin.py)."""
 import io, json, mimetypes, os, re, secrets, shutil, subprocess
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import urlparse, parse_qs, unquote, quote
 from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -113,14 +113,22 @@ def upload(q, body):
 
 
 def publish():
-    def run(*a):
-        r = subprocess.run(a, cwd=ROOT, capture_output=True, text=True, encoding='utf8', errors='replace')
-        return (r.stdout + r.stderr).strip()
     if not os.path.isdir(os.path.join(ROOT, '.git')):
-        return 'Папка ещё не связана с GitHub. Сначала настройте репозиторий (см. README.md).'
-    run('git', 'add', '-A')
-    out = run('git', 'commit', '-m', 'Обновление галерей')
-    return out + '\n' + run('git', 'push')
+        return 'Папка ещё не связана с GitHub (см. README.md).'
+    git = shutil.which('git')
+    if git:  # если установлен обычный Git — публикуем сами
+        def run(*a):
+            r = subprocess.run((git,) + a, cwd=ROOT, capture_output=True, text=True, encoding='utf8', errors='replace')
+            return r.returncode, (r.stdout + r.stderr).strip()
+        run('add', '-A')
+        run('commit', '-m', 'Обновление галерей')
+        code, out = run('push')
+        if code == 0:
+            return 'Опубликовано! Сайт обновится примерно через минуту.'
+    # иначе открываем GitHub Desktop на этой папке
+    os.startfile('x-github-client://openLocalRepo/' + quote(ROOT.replace('\\', '/')))
+    return ('Открылся GitHub Desktop.\n1) Внизу слева нажмите «Commit to main».\n'
+            '2) Сверху нажмите «Push origin».\nСайт обновится примерно через минуту.')
 
 
 class H(BaseHTTPRequestHandler):

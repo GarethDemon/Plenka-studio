@@ -1,4 +1,7 @@
 {
- "about": null,
+ "about": {
+  "file": "9e49d66b9c4e.jpg",
+  "focus": "45% 30%"
+ },
  "slider": []
 }

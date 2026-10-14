@@ -155,6 +155,77 @@ def act(name, b):
     return d
 
 
+# ---------- Фото «Обо мне» и слайдер лучших кадров ----------
+SITE = os.path.join(ROOT, 'data', 'site.json')
+SDIR = os.path.join(ROOT, 'photos', 'site')
+
+
+def load_site():
+    try:
+        with open(SITE, encoding='utf8') as f:
+            d = json.load(f)
+    except Exception:
+        d = {}
+    d.setdefault('about', None)
+    d.setdefault('slider', [])
+    return d
+
+
+def rm_site_file(name):
+    for k in ('web', 'thumb'):
+        try:
+            os.remove(os.path.join(SDIR, k, name))
+        except OSError:
+            pass
+
+
+def site_upload(q, body):
+    kind = q['kind'][0]
+    if kind not in ('about', 'slider'):
+        raise ValueError('Неизвестный раздел')
+    ext = os.path.splitext(q['name'][0])[1].lower()
+    if ext not in ('.jpg', '.jpeg', '.png', '.webp'):
+        raise ValueError('Поддерживаются JPG, PNG, WEBP')
+    name = rid(6) + '.jpg'
+    im = ImageOps.exif_transpose(Image.open(io.BytesIO(body))).convert('RGB')
+    for k, size, qual in (('web', 2200, 86), ('thumb', 600, 80)):
+        os.makedirs(os.path.join(SDIR, k), exist_ok=True)
+        c = im.copy()
+        c.thumbnail((size, size))
+        c.save(os.path.join(SDIR, k, name), quality=qual, optimize=True, progressive=True)
+    d = load_site()
+    if kind == 'about':
+        if d['about']:
+            rm_site_file(d['about']['file'])
+        d['about'] = {'file': name, 'focus': '50% 35%'}
+    else:
+        d['slider'].append({'file': name})
+    write_json(SITE, d)
+    return d
+
+
+def site_act(b):
+    d = load_site()
+    a = b.get('action')
+    if a == 'about_delete' and d['about']:
+        rm_site_file(d['about']['file'])
+        d['about'] = None
+    elif a == 'about_focus' and d['about']:
+        d['about']['focus'] = str(b['focus'])[:20]
+    elif a == 'slider_delete':
+        d['slider'] = [x for x in d['slider'] if x['file'] != b['file']]
+        if HEX.match(os.path.splitext(b['file'])[0]):
+            rm_site_file(b['file'])
+    elif a == 'slider_order':
+        by = {x['file']: x for x in d['slider']}
+        d['slider'] = [by[f] for f in b['order'] if f in by] + [x for x in d['slider'] if x['file'] not in b['order']]
+    elif a != 'get':
+        raise ValueError('Неизвестное действие')
+    if a != 'get':
+        write_json(SITE, d)
+    return d
+
+
 def upload(q, body):
     d = load()
     g, f = find(d, q['slug'][0], q['fid'][0])
@@ -229,7 +300,11 @@ class H(BaseHTTPRequestHandler):
         body = self.rfile.read(int(self.headers.get('Content-Length', 0)))
         try:
             name = u.path.rsplit('/', 1)[-1]
-            if name == 'upload':
+            if name == 'site_upload':
+                r = site_upload(parse_qs(u.query), body)
+            elif name == 'site':
+                r = site_act(json.loads(body or b'{}'))
+            elif name == 'upload':
                 r = upload(parse_qs(u.query), body)
             elif name == 'publish':
                 r = {'log': publish()}

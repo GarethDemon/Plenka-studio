@@ -151,6 +151,22 @@ section.f{margin-top:26px;animation:up .5s var(--ease) both}
 .ccrop{width:150px;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--line-2);line-height:0}
 .ccrop img{width:100%;height:100%;object-fit:cover;transition:object-position .35s var(--ease)}
 .chint{max-width:240px;color:var(--ink-2);font-size:.9rem}
+/* раздел «Сайт» */
+.g--site{border:1px dashed var(--line-2);margin:0 0 14px}
+.g--site .mono{color:var(--accent)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:12px}
+.sl{position:relative;background:#dfe5ea;cursor:grab;animation:pop .45s var(--ease) both;transition:transform .25s var(--ease),box-shadow .25s,opacity .2s}
+.sl img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;pointer-events:none}
+.sl.drag{opacity:.35}.sl.over{transform:scale(.96);box-shadow:0 0 0 2px var(--accent)}
+.sl .n{position:absolute;left:6px;top:6px;background:var(--ink);color:#fff;padding:3px 7px}
+.sl .ctl{position:absolute;left:6px;right:6px;bottom:6px;display:flex;gap:4px;justify-content:space-between;opacity:0;transition:opacity .2s}
+.sl:hover .ctl{opacity:1}
+.sl .ctl button{width:30px;height:30px;padding:0;border:0;background:rgba(255,255,255,.92);cursor:pointer}
+.sl .ctl button:hover{background:var(--accent);color:#fff}.sl .ctl [data-sdel]:hover{background:var(--danger)}
+.about{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;margin-top:12px}
+.about .cfull img{max-height:320px}
+.about .mono{display:block;margin-bottom:6px;color:var(--muted)}
+.about .ccrop{width:200px;aspect-ratio:4/5}
 /* модалка и тосты */
 #modal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(21,32,43,.35);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
 #modal.on{opacity:1;visibility:visible}
@@ -181,6 +197,7 @@ section.f{margin-top:26px;animation:up .5s var(--ease) both}
 
 <aside>
  <div class="brand"><div class="brand__logo">◎</div><div><b>PLЁNKA</b><span class="mono">admin console</span></div></div>
+ <div class="g g--site" data-s="__site"><span class="mono">◈</span><span class="g__t">Сайт: обо мне и слайдер</span></div>
  <div class="side__h mono"><span>Галереи</span><span id="cnt">00</span></div>
  <div id="side"></div>
  <div class="side__foot">
@@ -197,7 +214,7 @@ section.f{margin-top:26px;animation:up .5s var(--ease) both}
 const SITE='https://garethdemon.github.io/Plenka-studio/';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pad=n=>String(n).padStart(2,'0');
-let d={galleries:[]},cur=null,lastCur=null;
+let d={galleries:[]},cur=null,lastCur=null,S={about:null,slider:[]};
 $('#site').href=SITE;
 
 /* загрузка */
@@ -219,15 +236,40 @@ function modal({title,text='',input,ok='OK',cancel='Отмена',danger}){retur
 
 async function api(n,b){const r=await fetch('/api/'+n,{method:'POST',body:JSON.stringify(b||{})});const j=await r.json();if(!r.ok)throw new Error(j.error);return j}
 async function act(n,b,msg){try{d=await api(n,b);render();if(msg)toast(msg)}catch(e){toast(e.message,true)}}
-async function reload(){d=await(await fetch('/api/data')).json();render()}
+async function reload(){d=await(await fetch('/api/data')).json();try{S=await api('site',{action:'get'})}catch(e){}render()}
+async function sact(b,msg){try{S=await api('site',b);render();if(msg)toast(msg)}catch(e){toast(e.message,true)}}
 const link=slug=>`${SITE}gallery.html?g=${slug}`;
 
+function renderSite(){
+ const a=S.about,fx=(a&&a.focus)||'50% 35%',[fxX,fxY]=fx.split(' ');
+ $('#main').innerHTML=`<div class="top"><div class="crumbs mono">Раздел <b>сайт</b> · обо мне · слайдер ${pad(S.slider.length)} кадров</div>
+  <div class="acts" style="margin:0"><a class="btn" href="${SITE}#about" target="_blank" rel="noopener">Посмотреть на сайте ↗</a></div></div>
+ <div class="head"><h1><span class="glitch on" data-t="Витрина сайта">Витрина сайта</span></h1></div>
+ <section class="f" data-kind="about"><div class="f__h"><h3>Фото «Обо мне»</h3><span class="mono">одно фото · 4:5</span>${a?'<a class="del" data-adel>удалить</a>':''}</div>
+  <div class="zone"><div>${a?'Перетащите фото сюда, чтобы заменить, или':'Перетащите фото сюда или'} <label>выберите файл<input type="file" accept="image/*"></label></div><span class="mono">сжимается для сайта автоматически</span><div class="prog"><i></i></div><div class="st"></div></div>
+  ${a?`<div class="about"><div><span class="mono">Кликни по лицу</span><div class="cfull" id="afull"><img src="/photos/site/web/${a.file}" alt=""><span class="dot" style="left:${fxX};top:${fxY}"></span></div></div>
+  <div><span class="mono">Так увидят на сайте</span><div class="ccrop" id="acrop"><img src="/photos/site/web/${a.file}" alt="" style="object-position:${fx}"></div></div></div>`:''}</section>
+ <section class="f" data-kind="slider"><div class="f__h"><h3>Слайдер лучших кадров</h3><span class="mono">${pad(S.slider.length)} кадров · лучше 5–7</span></div>
+  <div class="zone"><div>Перетащите кадры сюда или <label>выберите файлы<input type="file" multiple accept="image/*"></label></div><span class="mono">порядок — перетаскиванием карточек или стрелками</span><div class="prog"><i></i></div><div class="st"></div></div>
+  <div class="sgrid" id="sgrid">${S.slider.map((x,i)=>`<div class="sl" draggable="true" data-file="${x.file}" style="animation-delay:${i*40}ms"><img src="/photos/site/thumb/${x.file}" alt=""><span class="n mono">${pad(i+1)}</span>
+   <div class="ctl"><button data-mv="-1" title="Левее">←</button><button data-sdel title="Удалить">✕</button><button data-mv="1" title="Правее">→</button></div></div>`).join('')}</div></section>`;
+}
+async function upSite(kind,files,zone){
+ files=[...files].filter(f=>f.type.startsWith('image/'));if(!files.length)return;if(kind=='about')files=files.slice(0,1);
+ const st=zone.querySelector('.st'),bar=zone.querySelector('.prog i');zone.classList.add('busy');let i=0;
+ for(const f of files){st.textContent=`Загрузка ${++i}/${files.length}: ${f.name}`;
+  const r=await fetch(`/api/site_upload?kind=${kind}&name=${encodeURIComponent(f.name)}`,{method:'POST',body:f});
+  if(!r.ok)toast((await r.json()).error,true);else S=await r.json();bar.style.width=(i/files.length*100)+'%'}
+ zone.classList.remove('busy');toast(kind=='about'?'Фото «Обо мне» обновлено':`В слайдер добавлено: ${i}`);render();
+}
+const order=()=>[...document.querySelectorAll('#sgrid .sl')].map(x=>x.dataset.file);
 function render(){
+ document.querySelectorAll('.g--site').forEach(x=>x.classList.toggle('on',cur=='__site'));
+ if(cur=='__site'){$('#cnt').textContent=pad(d.galleries.length);$('#side').querySelectorAll('.g').forEach(x=>x.classList.remove('on'));if(!$('#side').children.length)renderSide();renderSite();lastCur=cur;return}
  if(!d.galleries.find(g=>g.slug==cur))cur=d.galleries[0]&&d.galleries[0].slug;
  const fresh=cur!==lastCur;lastCur=cur;
  $('#cnt').textContent=pad(d.galleries.length);
- $('#side').innerHTML=d.galleries.map((g,i)=>`<div class="g${g.slug==cur?' on':''}" data-s="${g.slug}" style="animation-delay:${i*40}ms">
-  <span class="mono">${pad(i+1)}</span><span class="g__t">${esc(g.title)}</span>${g.hidden?'<span title="Скрытая">🔒</span>':''}</div>`).join('');
+ renderSide();
  const g=d.galleries.find(x=>x.slug==cur);
  if(!g){$('#main').innerHTML=`<div class="empty"><div class="mono" style="color:var(--accent)">// память пуста</div><h2>Создайте первую галерею</h2><button class="btn btn--p" id="ng2">+ Новая галерея</button></div>`;return}
  const total=g.folders.reduce((s,f)=>s+f.photos.length,0);
@@ -248,6 +290,8 @@ function render(){
   <div class="ph">${f.photos.map((p,i)=>{const t=`photos/${g.slug}/${f.id}/thumb/${p}`,c=g.cover==t;return `<div data-p="${p}" class="${c?'cov':''}" style="animation-delay:${Math.min(i,24)*25}ms"><img src="/${t}" loading="lazy" alt=""><b data-del title="Удалить">✕</b><i data-cov title="Сделать обложкой">${c?'★':'☆'}</i>${c?'<span class="badge mono">обложка</span>':''}</div>`}).join('')}</div></section>`).join('');
 }
 
+function renderSide(){$('#side').innerHTML=d.galleries.map((g,i)=>`<div class="g${g.slug==cur?' on':''}" data-s="${g.slug}" style="animation-delay:${i*40}ms">
+  <span class="mono">${pad(i+1)}</span><span class="g__t">${esc(g.title)}</span>${g.hidden?'<span title="Скрытая">🔒</span>':''}</div>`).join('')}
 async function up(slug,fid,files,zone){
  files=[...files].filter(f=>f.type.startsWith('image/'));if(!files.length)return;
  const st=zone.querySelector('.st'),bar=zone.querySelector('.prog i');zone.classList.add('busy');let i=0,okN=0;
@@ -260,11 +304,18 @@ async function up(slug,fid,files,zone){
 
 document.addEventListener('click',async e=>{
  const t=e.target,sec=t.closest('section'),fid=sec&&sec.dataset.f;
- if(t.closest('#cfull')){const img=$('#cfull img'),r=img.getBoundingClientRect();
+ if(t.closest('#afull')){const img=$('#afull img'),r=img.getBoundingClientRect();
+  const x=Math.round(Math.min(100,Math.max(0,(e.clientX-r.left)/r.width*100))),y=Math.round(Math.min(100,Math.max(0,(e.clientY-r.top)/r.height*100))),f=`${x}% ${y}%`;
+  $('#afull .dot').style.left=x+'%';$('#afull .dot').style.top=y+'%';$('#acrop img').style.objectPosition=f;
+  try{S=await api('site',{action:'about_focus',focus:f});toast('Центр фото сохранён')}catch(x){toast(x.message,true)}}
+ else if(t.dataset.adel!==undefined){if(await modal({title:'Удаление',text:'Убрать фото «Обо мне»?',ok:'Удалить',danger:1}))sact({action:'about_delete'},'Фото удалено')}
+ else if(t.dataset.sdel!==undefined){if(await modal({title:'Удаление',text:'Убрать кадр из слайдера?',ok:'Удалить',danger:1}))sact({action:'slider_delete',file:t.closest('.sl').dataset.file},'Кадр убран')}
+ else if(t.dataset.mv!==undefined){const o=order(),f=t.closest('.sl').dataset.file,i=o.indexOf(f),j=i+Number(t.dataset.mv);if(j<0||j>=o.length)return;o.splice(i,1);o.splice(j,0,f);sact({action:'slider_order',order:o})}
+ else if(t.closest('#cfull')){const img=$('#cfull img'),r=img.getBoundingClientRect();
   const x=Math.round(Math.min(100,Math.max(0,(e.clientX-r.left)/r.width*100))),y=Math.round(Math.min(100,Math.max(0,(e.clientY-r.top)/r.height*100)));
   const f=`${x}% ${y}%`;$('#cfull .dot').style.left=x+'%';$('#cfull .dot').style.top=y+'%';$('.ccrop img').style.objectPosition=f;
   try{d=await api('update',{slug:cur,focus:f});toast('Центр обложки сохранён')}catch(x){toast(x.message,true)}}
- else if(t.closest('.g')){cur=t.closest('.g').dataset.s;render()}
+ else if(t.closest('.g')){cur=t.closest('.g').dataset.s;lastCur=null;render()}
  else if(t.id=='ng'||t.id=='ng2'){const title=await modal({title:'Новая галерея',text:'Название съёмки',input:'',ok:'Создать'});
   if(title){await act('gallery',{title,date:new Date().toISOString().slice(0,10)},'Галерея создана');cur=d.galleries[0].slug;render()}}
  else if(t.id=='sv')act('update',{slug:cur,title:$('#t').value,date:$('#dt').value,hidden:$('#h').checked},'Сохранено');
@@ -280,11 +331,18 @@ document.addEventListener('click',async e=>{
   try{const r=await api('publish');await modal({title:'Публикация',text:r.log||'Готово',cancel:'',ok:'Понятно'})}catch(x){toast(x.message,true)}
   b.textContent='⇪ Опубликовать на сайт'}
 });
-document.addEventListener('change',e=>{if(e.target.type=='file'){const s=e.target.closest('section');up(cur,s.dataset.f,e.target.files,s.querySelector('.zone'));e.target.value=''}});
+document.addEventListener('change',e=>{if(e.target.type=='file'){const s=e.target.closest('section');if(s.dataset.kind)upSite(s.dataset.kind,e.target.files,s.querySelector('.zone'));else up(cur,s.dataset.f,e.target.files,s.querySelector('.zone'));e.target.value=''}});
+/* перетаскивание карточек слайдера */
+let dragF=null;
+document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.sl');if(c){dragF=c.dataset.file;c.classList.add('drag');e.dataTransfer.effectAllowed='move'}});
+document.addEventListener('dragend',()=>{dragF=null;document.querySelectorAll('.sl').forEach(x=>x.classList.remove('drag','over'))});
 ['dragover','dragleave','drop'].forEach(n=>document.addEventListener(n,e=>{
- e.preventDefault();const z=e.target.closest&&e.target.closest('.zone');
+ e.preventDefault();
+ if(dragF){const c=e.target.closest&&e.target.closest('.sl');document.querySelectorAll('.sl.over').forEach(x=>x.classList.remove('over'));if(!c||c.dataset.file==dragF)return;
+  if(n=='dragover')c.classList.add('over');if(n=='drop'){const o=order();o.splice(o.indexOf(dragF),1);o.splice(o.indexOf(c.dataset.file)+(o.indexOf(c.dataset.file)>=0?0:0),0,dragF);const f=dragF;dragF=null;sact({action:'slider_order',order:o},'Порядок сохранён')}return}
+ const z=e.target.closest&&e.target.closest('.zone');
  document.querySelectorAll('.zone.over').forEach(x=>x.classList.remove('over'));
  if(!z)return;if(n=='dragover')z.classList.add('over');
- if(n=='drop'){const s=z.closest('section');up(cur,s.dataset.f,e.dataTransfer.files,z)}}));
+ if(n=='drop'){const s=z.closest('section');if(s.dataset.kind)upSite(s.dataset.kind,e.dataTransfer.files,z);else up(cur,s.dataset.f,e.dataTransfer.files,z)}}));
 reload();
 </script></body></html>

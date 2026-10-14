@@ -49,6 +49,7 @@
         <span class="brand__sub mono">photo&nbsp;studio</span>
       </a>
       <nav class="nav" id="nav" aria-label="Основная навигация">
+        <a href="#about">Обо мне</a>
         <a href="#services">Секвенции</a>
         <a href="#gallery">Архив</a>
         <a href="#process">Протокол</a>
@@ -106,6 +107,46 @@
         </div>
       </div>
       <a class="scroll-hint mono" href="#services">Прокрутите, чтобы синхронизироваться <span>↓</span></a>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section about" id="about">
+      <div class="container about__grid">
+        <figure class="about__photo hud reveal" id="aboutPhoto">
+          <div class="about__frame"><img id="aboutImg" alt="Саша, фотограф Plёnka Studio" loading="lazy"></div>
+          <figcaption class="mono">Оператор // <b>Саша</b> · СПб</figcaption>
+        </figure>
+        <div class="about__text">
+          <header class="section-head reveal">
+            <p class="mono tag">// Досье оператора</p>
+            <h2>Привет, я Саша</h2>
+          </header>
+          <p class="about__lead reveal">Фотограф из Санкт-Петербурга, снимаю с&nbsp;2018 года. То, что я делаю, я называю гранж-кино: тёплый свет лампы, пластинки на полках, плед и&nbsp;мысли, которые приходят только холодной ночью.</p>
+          <p class="reveal">Мой стиль вырос из гранжа и&nbsp;пост-панка — там, где домашний уют встречается с&nbsp;городской темнотой. Зерно, засветы, мягкий фокус и&nbsp;потрёпанный вид старых фотокарточек для меня не дефекты, а&nbsp;интонация.</p>
+          <p class="reveal">Я не гонюсь за идеальной картинкой — я ищу настроение, в&nbsp;котором вы узнаете себя, как в&nbsp;кадре из фильма, который хочется пересматривать. А&nbsp;когда одного кадра мало, собираю из съёмки постер.</p>
+          <ul class="about__facts mono reveal">
+            <li>С 2018</li><li>Санкт-Петербург</li><li>Grunge / post-punk</li><li>Плёночная эстетика</li><li>Постеры</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWREEL -->
+    <section class="section section--alt reel" id="reel" hidden>
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="mono tag">// Избранные кадры</p>
+          <h2>Кадры, которые я пересматриваю</h2>
+        </header>
+        <div class="reel__stage reveal" id="reelStage" aria-roledescription="слайдер" aria-label="Лучшие кадры">
+          <div class="reel__slides" id="reelSlides"></div>
+          <div class="reel__grain" aria-hidden="true"></div>
+          <button class="reel__btn reel__btn--prev" type="button" data-reel="-1" aria-label="Предыдущий кадр">‹</button>
+          <button class="reel__btn reel__btn--next" type="button" data-reel="1" aria-label="Следующий кадр">›</button>
+          <div class="reel__hud mono"><span>REC ●</span><span id="reelCount">01 / 05</span></div>
+          <div class="reel__bar"><i id="reelBar"></i></div>
+        </div>
+      </div>
     </section>
 
     <!-- SERVICES -->

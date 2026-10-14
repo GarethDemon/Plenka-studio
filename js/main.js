@@ -7,6 +7,7 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const rand = (min, max) => min + Math.random() * (max - min);
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+  const isDark = () => document.documentElement.dataset.theme === 'dark';
 
   const storage = {
     get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
@@ -238,10 +239,10 @@
         const oy = my * s.z * 24;
         polygon(s.x + ox, s.y + oy, s.r, s.sides, s.a);
         if (s.fill) {
-          ctx.fillStyle = `rgba(255,255,255,${0.35 * s.z})`;
+          ctx.fillStyle = isDark() ? `rgba(111,208,238,${0.04 * s.z})` : `rgba(255,255,255,${0.35 * s.z})`;
           ctx.fill();
         }
-        ctx.strokeStyle = `rgba(21,32,43,${0.08 * s.z})`;
+        ctx.strokeStyle = isDark() ? `rgba(166,182,194,${0.12 * s.z})` : `rgba(21,32,43,${0.08 * s.z})`;
         ctx.stroke();
       }
     };
@@ -292,6 +293,8 @@
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
+      const ink = isDark() ? '200,215,226' : '21,32,43';
+      const blade = isDark() ? '3,7,11' : '21,32,43';
       const cx = w / 2, cy = h / 2;
       const R = Math.min(w, h) * 0.34;
       // плавно «дышит» между f/1.4 и f/16, иногда щёлкает затвором
@@ -301,14 +304,14 @@
 
       // внешние кольца и шкала фокуса
       ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(21,32,43,.18)';
+      ctx.strokeStyle = `rgba(${ink},.18)`;
       ctx.beginPath(); ctx.arc(cx, cy, R * 1.32, 0, Math.PI * 2); ctx.stroke();
       ctx.beginPath(); ctx.arc(cx, cy, R * 1.08, 0, Math.PI * 2); ctx.stroke();
       for (let i = 0; i < 72; i++) {
         const a = i / 72 * Math.PI * 2 - t * 0.12;
         const long = i % 6 === 0;
         const r1 = R * 1.1, r2 = R * (long ? 1.22 : 1.16);
-        ctx.strokeStyle = i % 18 === 0 ? 'rgba(26,156,198,.9)' : 'rgba(21,32,43,.28)';
+        ctx.strokeStyle = i % 18 === 0 ? 'rgba(26,156,198,.9)' : `rgba(${ink},.28)`;
         ctx.beginPath();
         ctx.moveTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
         ctx.lineTo(cx + Math.cos(a) * r2, cy + Math.sin(a) * r2);
@@ -326,8 +329,8 @@
         v.push([Math.cos(a) * r, Math.sin(a) * r]);
       }
       const g = ctx.createRadialGradient(cx, cy, r, cx, cy, R);
-      g.addColorStop(0, 'rgba(21,32,43,.55)');
-      g.addColorStop(1, 'rgba(21,32,43,.85)');
+      g.addColorStop(0, `rgba(${blade},.55)`);
+      g.addColorStop(1, `rgba(${blade},.85)`);
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(cx, cy, R, 0, Math.PI * 2);
@@ -343,7 +346,7 @@
         ctx.strokeStyle = i === 0 ? 'rgba(111,208,238,.95)' : 'rgba(232,236,240,.35)';
         ctx.beginPath(); ctx.moveTo(cx + q[0], cy + q[1]); ctx.lineTo(cx + e[0], cy + e[1]); ctx.stroke();
       }
-      ctx.strokeStyle = 'rgba(21,32,43,.6)';
+      ctx.strokeStyle = `rgba(${ink},.6)`;
       ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
 
       // свет в отверстии
@@ -365,13 +368,13 @@
         ctx.beginPath(); ctx.moveTo(x, y - sy * k); ctx.lineTo(x, y); ctx.lineTo(x - sx * k, y); ctx.stroke();
       });
       ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(21,32,43,.5)';
+      ctx.strokeStyle = `rgba(${ink},.5)`;
       ctx.beginPath();
       ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8);
       ctx.stroke();
 
       // сетка третей
-      ctx.strokeStyle = 'rgba(21,32,43,.07)';
+      ctx.strokeStyle = `rgba(${ink},.07)`;
       ctx.beginPath();
       for (let i = 1; i < 3; i++) {
         ctx.moveTo(w * i / 3, 0); ctx.lineTo(w * i / 3, h);
@@ -767,6 +770,14 @@
   /* ---------------- Старт ---------------- */
 
   $('#year').textContent = new Date().getFullYear();
+  const themeBtn = $('#themeBtn');
+  if (themeBtn) themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    document.documentElement.classList.add('theme-anim');
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch { /* приватный режим */ }
+    setTimeout(() => document.documentElement.classList.remove('theme-anim'), 600);
+  });
   initBackground();
   initAperture();
   initScroll();

@@ -1490,3 +1490,17 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
 html.theme-anim .theme-sw__orb { transition: transform .9s cubic-bezier(.65, 0, .25, 1), box-shadow .9s ease !important; }
 html.theme-anim .theme-sw__orb::before, html.theme-anim .theme-sw__orb::after { transition: opacity .9s ease !important; }
 html.theme-anim .theme-sw__t { transition: opacity .7s ease, filter .7s ease !important; }
+
+/* ---------- Взрыв-схема фотоаппарата ---------- */
+.cam-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.cam-label {
+  position: absolute; left: 0; top: 0; white-space: nowrap; font-size: .58rem; color: var(--ink);
+  padding: 4px 8px 4px 14px; margin: -10px 0 0 6px; opacity: 0; will-change: transform, opacity;
+  background: var(--panel); border: 1px solid var(--line-2); backdrop-filter: blur(6px);
+}
+.cam-label::before { content: ""; position: absolute; left: -7px; top: 50%; width: 12px; height: 1px; background: var(--accent); }
+.cam-label::after { content: ""; position: absolute; left: 3px; top: calc(50% - 2px); width: 4px; height: 4px; background: var(--accent); }
+.cam-label.is-left { translate: -100% 0; margin-left: -6px; padding: 4px 14px 4px 8px; }
+.cam-label.is-left::before { left: auto; right: -7px; }
+.cam-label.is-left::after { left: auto; right: 3px; }
+@media (max-width: 600px) { .cam-labels { display: none; } }

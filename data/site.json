@@ -1,7 +1,23 @@
 {
  "about": {
   "file": "9e49d66b9c4e.jpg",
-  "focus": "45% 30%"
+  "focus": "59% 77%"
  },
- "slider": []
+ "slider": [
+  {
+   "file": "6e7e54c0fbdb.jpg"
+  },
+  {
+   "file": "6e088201ae7e.jpg"
+  },
+  {
+   "file": "c785ec1403b3.jpg"
+  },
+  {
+   "file": "836a11ecabbd.jpg"
+  },
+  {
+   "file": "a2e212777408.jpg"
+  }
+ ]
 }

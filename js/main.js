@@ -774,6 +774,7 @@
   if (themeBtn) themeBtn.addEventListener('click', () => {
     const next = isDark() ? 'light' : 'dark';
     document.documentElement.classList.add('theme-anim');
+    themeBtn.classList.remove('is-go'); void themeBtn.offsetWidth; themeBtn.classList.add('is-go');
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch { /* приватный режим */ }
     setTimeout(() => document.documentElement.classList.remove('theme-anim'), 600);

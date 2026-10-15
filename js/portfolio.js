@@ -34,7 +34,7 @@
     }
   }
 
-  // Слайдер
+  // Карусель лучших кадров
   const sec = document.getElementById('reel');
   const list = (d.slider || []).filter((x) => x && x.file);
   if (!sec || !list.length) return;
@@ -44,54 +44,61 @@
   const bar = document.getElementById('reelBar');
   const stage = document.getElementById('reelStage');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const DUR = 5500;
+  const DUR = 5000;
   const pad = (n) => String(n).padStart(2, '0');
-  box.innerHTML = list.map((x, i) => {
-    const u = 'photos/site/web/' + x.file;
-    return `<div class="reel__slide" data-i="${i}"><div class="bg" style="background-image:url('${u}')"></div><img src="${u}" alt="Кадр ${i + 1}" ${i ? 'loading="lazy"' : ''}></div>`;
-  }).join('');
+  box.innerHTML = list.map((x, i) =>
+    `<figure class="reel__slide" data-i="${i}"><img src="photos/site/web/${x.file}" alt="Кадр ${i + 1}" ${i > 1 && i < list.length - 1 ? 'loading="lazy"' : ''} draggable="false"></figure>`
+  ).join('');
   const slides = [...box.children];
-  let cur = -1, t0 = 0, paused = false, visible = true, acc = 0;
+  const n = slides.length;
+  let cur = 0, acc = 0, t0 = 0, paused = false, visible = true;
 
-  const show = (i) => {
-    i = (i + slides.length) % slides.length;
-    if (i === cur) return;
-    slides.forEach((s, k) => s.classList.toggle('is-on', k === i));
-    const s = slides[i];
-    s.classList.remove('glitch-in'); void s.offsetWidth; s.classList.add('glitch-in');
-    cur = i; acc = 0; t0 = performance.now();
-    count.textContent = `${pad(i + 1)} / ${pad(slides.length)}`;
+  const layout = () => {
+    slides.forEach((s, i) => {
+      let d = (i - cur + n) % n;          // 0 — центр, 1 — следующий, n-1 — предыдущий
+      if (d > n / 2) d -= n;
+      s.className = 'reel__slide ' + (d === 0 ? 'is-center' : d === 1 ? 'is-next' : d === -1 ? 'is-prev' : d > 0 ? 'is-far-r' : 'is-far-l');
+    });
+    if (n === 2) slides[(cur + 1) % 2].className = 'reel__slide is-next';
+    const c = slides[cur];
+    c.classList.add('flash');
+    count.textContent = `${pad(cur + 1)} / ${pad(n)}`;
   };
+  const go = (i) => { cur = (i + n) % n; acc = 0; layout(); };
   const tick = (now) => {
-    if (!paused && visible && !reduce && slides.length > 1) {
+    if (!paused && visible && !reduce && n > 1) {
       acc += now - t0;
-      if (acc >= DUR) show(cur + 1);
+      if (acc >= DUR) go(cur + 1);
       bar.style.width = Math.min(100, acc / DUR * 100) + '%';
     }
     t0 = now;
     requestAnimationFrame(tick);
   };
-  show(0);
-  requestAnimationFrame((n) => { t0 = n; tick(n); });
+  layout();
+  requestAnimationFrame((t) => { t0 = t; tick(t); });
 
   stage.addEventListener('click', (e) => {
     const b = e.target.closest('[data-reel]');
-    if (b) show(cur + Number(b.dataset.reel));
+    if (b) return go(cur + Number(b.dataset.reel));
+    const s = e.target.closest('.reel__slide');
+    if (s && s.classList.contains('is-next')) go(cur + 1);
+    if (s && s.classList.contains('is-prev')) go(cur - 1);
   });
   stage.addEventListener('mouseenter', () => { paused = true; });
   stage.addEventListener('mouseleave', () => { paused = false; });
   document.addEventListener('keydown', (e) => {
     if (!visible) return;
-    if (e.key === 'ArrowRight') show(cur + 1);
-    if (e.key === 'ArrowLeft') show(cur - 1);
+    if (e.key === 'ArrowRight') go(cur + 1);
+    if (e.key === 'ArrowLeft') go(cur - 1);
   });
   let sx = null;
-  stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; paused = true; }, { passive: true });
   stage.addEventListener('touchend', (e) => {
-    if (sx === null) return;
-    const dx = e.changedTouches[0].clientX - sx;
-    if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
-    sx = null;
+    if (sx !== null) {
+      const dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+    }
+    sx = null; paused = false;
   });
   new IntersectionObserver(([en]) => { visible = en.isIntersecting; }, { threshold: 0.3 }).observe(stage);
 })();

@@ -1345,26 +1345,32 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
   background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0));
 }
 .theme-sw__orb {
-  position: absolute; top: 50%; left: 4px; width: var(--o); height: var(--o); border-radius: 999px; transform: translateY(-50%);
-  background: radial-gradient(circle at 42% 40%, #fffbe3 0%, #ffe94d 35%, #ffc400 62%, rgba(255, 170, 0, 0) 74%);
+  position: absolute; top: 50%; left: 4px; width: var(--o); height: var(--o); border-radius: 999px;
+  transform: translate3d(0, -50%, 0);
   box-shadow: 0 0 14px 5px rgba(255, 214, 40, .55), 0 0 34px 12px rgba(255, 170, 0, .28);
-  filter: blur(.6px);
-  transition: left .6s cubic-bezier(.65, -0.25, .3, 1.35), background .5s, box-shadow .5s;
+  transition: transform .9s cubic-bezier(.65, 0, .25, 1), box-shadow .9s ease;
+  will-change: transform;
 }
-.theme-sw.is-go .theme-sw__orb { animation: orbStretch .6s ease; }
-@keyframes orbStretch { 45% { width: calc(var(--o) * 1.7); filter: blur(3px); } }
+.theme-sw__orb::before, .theme-sw__orb::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; filter: blur(.6px); transition: opacity .9s ease;
+}
+.theme-sw__orb::before { background: radial-gradient(circle at 42% 40%, #fffbe3 0%, #ffe94d 35%, #ffc400 62%, rgba(255, 170, 0, 0) 74%); }
+.theme-sw__orb::after { background: radial-gradient(circle at 42% 40%, #ffffff 0%, #d8f3ff 35%, #6fd0ee 62%, rgba(111, 208, 238, 0) 74%); opacity: 0; }
+.theme-sw.is-go .theme-sw__orb::before, .theme-sw.is-go .theme-sw__orb::after { animation: orbBlur .9s ease; }
+@keyframes orbBlur { 0% { filter: blur(.6px); } 45% { filter: blur(3.5px); transform: scaleX(1.35); } 100% { filter: blur(.6px); transform: none; } }
 .theme-sw__t {
   position: absolute; top: 50%; transform: translateY(-50%); font: 600 9px/1 var(--mono); letter-spacing: .14em;
-  color: rgba(255, 255, 255, .78); text-shadow: 0 0 6px rgba(255, 255, 255, .35); transition: opacity .4s, filter .4s;
+  color: rgba(255, 255, 255, .78); text-shadow: 0 0 6px rgba(255, 255, 255, .35); transition: opacity .7s ease, filter .7s ease;
 }
 .theme-sw__t--day { right: 11px; }
 .theme-sw__t--night { left: 9px; opacity: 0; filter: blur(3px); }
 .theme-sw:hover .theme-sw__orb { box-shadow: 0 0 18px 7px rgba(255, 214, 40, .7), 0 0 44px 16px rgba(255, 170, 0, .35); }
 [data-theme="dark"] .theme-sw__orb {
-  left: calc(var(--w) - var(--o) - 6px);
-  background: radial-gradient(circle at 42% 40%, #ffffff 0%, #d8f3ff 35%, #6fd0ee 62%, rgba(111, 208, 238, 0) 74%);
+  transform: translate3d(calc(var(--w) - var(--o) - 10px), -50%, 0);
   box-shadow: 0 0 14px 5px rgba(111, 208, 238, .45), 0 0 34px 12px rgba(59, 184, 226, .2);
 }
+[data-theme="dark"] .theme-sw__orb::before { opacity: 0; }
+[data-theme="dark"] .theme-sw__orb::after { opacity: 1; }
 [data-theme="dark"] .theme-sw:hover .theme-sw__orb { box-shadow: 0 0 18px 7px rgba(111, 208, 238, .6), 0 0 44px 16px rgba(59, 184, 226, .3); }
 [data-theme="dark"] .theme-sw__t--day { opacity: 0; filter: blur(3px); }
 [data-theme="dark"] .theme-sw__t--night { opacity: 1; filter: none; }
@@ -1408,8 +1414,6 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
 .about__frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #1b1714; }
 .about__frame img { width: 100%; height: 100%; object-fit: cover; filter: sepia(.12) saturate(1.05) contrast(1.02); transition: transform 1.6s var(--ease); }
 .about__photo:hover .about__frame img { transform: scale(1.04); }
-.about__frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay; opacity: .5;
-  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0,0,0,.55) 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); }
 .about__photo figcaption { margin-top: 12px; color: var(--muted); }
 .about__photo figcaption b { color: var(--ink); }
 .about__text p { color: var(--ink-2); margin-top: 16px; max-width: 58ch; }
@@ -1461,3 +1465,28 @@ main, .footer, .topbar, .sync { position: relative; z-index: 2; }
   .reel__slide.is-prev { --x: -64%; } .reel__slide.is-next { --x: 64%; }
   .reel__btn { top: auto; bottom: 0; transform: none; width: 42px; height: 42px; }
 }
+
+/* ---------- Плёнка / CRT: зерно, сканлайны, виньетка ---------- */
+.crt { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.crt::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, .16) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, .5) 100%);
+  animation: crtRoll 7s linear infinite;
+}
+.crt::after {
+  content: ""; position: absolute; inset: -50%; opacity: .16; mix-blend-mode: overlay; animation: grain .8s steps(4) infinite;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@keyframes crtRoll { to { background-position: 0 30px, 0 0; } }
+.crt__rec { position: absolute; top: 12px; left: 14px; font: 600 10px/1 var(--mono); letter-spacing: .14em; color: #ff6a3d; opacity: 0; transition: opacity .3s; text-shadow: 0 0 6px rgba(255, 106, 61, .6); }
+.crt__rec::before { content: "● "; animation: blink 1.4s steps(1) infinite; }
+.gcard:hover .crt__rec, .about__photo .crt__rec { opacity: 1; }
+.gcard img, .about__frame img { will-change: transform; }
+.gcard:hover img, .about__photo:hover .about__frame img { animation: flick .5s steps(3) 1; }
+.gcard__t, .gcard__m { z-index: 3; }
+/* плавный ход шарика не перебивается общей анимацией смены темы */
+html.theme-anim .theme-sw__orb { transition: transform .9s cubic-bezier(.65, 0, .25, 1), box-shadow .9s ease !important; }
+html.theme-anim .theme-sw__orb::before, html.theme-anim .theme-sw__orb::after { transition: opacity .9s ease !important; }
+html.theme-anim .theme-sw__t { transition: opacity .7s ease, filter .7s ease !important; }

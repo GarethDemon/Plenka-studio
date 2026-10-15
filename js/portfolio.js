@@ -10,7 +10,7 @@
       const cover = g.cover, n = g.count;
       const date = g.date ? g.date.split('-').reverse().join('.') + ' · ' : '';
       return `<a class="gcard" href="gallery.html?g=${g.slug}"><img loading="lazy" src="${cover}" alt="${esc(g.title)}" style="object-position:${esc(g.focus || '50% 50%')}">` +
-        `<span class="gcard__t">${esc(g.title)}</span><span class="gcard__m mono">${date}${n} фото</span></a>`;
+        `<span class="crt"><span class="crt__rec">PLAY</span></span><span class="gcard__t">${esc(g.title)}</span><span class="gcard__m mono">${date}${n} фото</span></a>`;
     }).join('') : '<p class="mono">Скоро здесь появятся съёмки.</p>';
   } catch (e) {
     box.innerHTML = '<p class="mono">Не удалось загрузить галереи.</p>';

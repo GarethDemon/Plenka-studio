@@ -245,11 +245,11 @@ function renderSite(){
  $('#main').innerHTML=`<div class="top"><div class="crumbs mono">Раздел <b>сайт</b> · обо мне · слайдер ${pad(S.slider.length)} кадров</div>
   <div class="acts" style="margin:0"><a class="btn" href="${SITE}#about" target="_blank" rel="noopener">Посмотреть на сайте ↗</a></div></div>
  <div class="head"><h1><span class="glitch on" data-t="Витрина сайта">Витрина сайта</span></h1></div>
- <section class="f" data-kind="about"><div class="f__h"><h3>Фото «Обо мне»</h3><span class="mono">одно фото · 4:5</span>${a?'<a class="del" data-adel>удалить</a>':''}</div>
+ <section class="f" data-kind="about"><div class="f__h"><h3>Фото «Обо мне»</h3><span class="mono">одно фото · 4:5</span>${a?'<a class="del" data-adel>удалить</a>':''}<button class="btn btn--p pub" style="margin-left:auto">⇪ Обновить на сайте</button></div>
   <div class="zone"><div>${a?'Перетащите фото сюда, чтобы заменить, или':'Перетащите фото сюда или'} <label>выберите файл<input type="file" accept="image/*"></label></div><span class="mono">сжимается для сайта автоматически</span><div class="prog"><i></i></div><div class="st"></div></div>
   ${a?`<div class="about"><div><span class="mono">Кликни по лицу</span><div class="cfull" id="afull"><img src="/photos/site/web/${a.file}" alt=""><span class="dot" style="left:${fxX};top:${fxY}"></span></div></div>
   <div><span class="mono">Так увидят на сайте</span><div class="ccrop" id="acrop"><img src="/photos/site/web/${a.file}" alt="" style="object-position:${fx}"></div></div></div>`:''}</section>
- <section class="f" data-kind="slider"><div class="f__h"><h3>Слайдер лучших кадров</h3><span class="mono">${pad(S.slider.length)} кадров · лучше 5–7</span></div>
+ <section class="f" data-kind="slider"><div class="f__h"><h3>Слайдер лучших кадров</h3><span class="mono">${pad(S.slider.length)} кадров · лучше 5–7</span><button class="btn btn--p pub" style="margin-left:auto">⇪ Обновить на сайте</button></div>
   <div class="zone"><div>Перетащите кадры сюда или <label>выберите файлы<input type="file" multiple accept="image/*"></label></div><span class="mono">порядок — перетаскиванием карточек или стрелками</span><div class="prog"><i></i></div><div class="st"></div></div>
   <div class="sgrid" id="sgrid">${S.slider.map((x,i)=>`<div class="sl" draggable="true" data-file="${x.file}" style="animation-delay:${i*40}ms"><img src="/photos/site/thumb/${x.file}" alt=""><span class="n mono">${pad(i+1)}</span>
    <div class="ctl"><button data-mv="-1" title="Левее">←</button><button data-sdel title="Удалить">✕</button><button data-mv="1" title="Правее">→</button></div></div>`).join('')}</div></section>`;
@@ -327,9 +327,9 @@ document.addEventListener('click',async e=>{
  else if(t.dataset.del!==undefined){if(await modal({title:'Удаление',text:'Удалить это фото?',ok:'Удалить',danger:1})){const card=t.parentNode;card.classList.add('out');
   setTimeout(()=>act('delete_photo',{slug:cur,fid,file:card.dataset.p}),300)}}
  else if(t.dataset.cov!==undefined)act('update',{slug:cur,cover:`photos/${cur}/${fid}/thumb/${t.parentNode.dataset.p}`,focus:'50% 30%'},'Обложка обновлена — кликни по лицу, чтобы отцентровать');
- else if(t.closest('#top')){const b=$('#top');b.textContent='Публикуем…';
+ else if(t.closest('#top,.pub')){const b=t.closest('#top,.pub'),old=b.textContent;b.textContent='Публикуем…';
   try{const r=await api('publish');await modal({title:'Публикация',text:r.log||'Готово',cancel:'',ok:'Понятно'})}catch(x){toast(x.message,true)}
-  b.textContent='⇪ Опубликовать на сайт'}
+  b.textContent=old}
 });
 document.addEventListener('change',e=>{if(e.target.type=='file'){const s=e.target.closest('section');if(s.dataset.kind)upSite(s.dataset.kind,e.target.files,s.querySelector('.zone'));else up(cur,s.dataset.f,e.target.files,s.querySelector('.zone'));e.target.value=''}});
 /* перетаскивание карточек слайдера */

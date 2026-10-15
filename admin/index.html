@@ -236,7 +236,7 @@ function modal({title,text='',input,ok='OK',cancel='Отмена',danger}){retur
 
 async function api(n,b){const r=await fetch('/api/'+n,{method:'POST',body:JSON.stringify(b||{})});const j=await r.json();if(!r.ok)throw new Error(j.error);return j}
 async function act(n,b,msg){try{d=await api(n,b);render();if(msg)toast(msg)}catch(e){toast(e.message,true)}}
-async function reload(){d=await(await fetch('/api/data')).json();try{S=await api('site',{action:'get'})}catch(e){}render()}
+async function reload(){d=await(await fetch('/api/data')).json();try{S=await api('site',{action:'get'})}catch(e){toast('Админка устарела: закрой чёрное окно и запусти ярлык заново',true)}render()}
 async function sact(b,msg){try{S=await api('site',b);render();if(msg)toast(msg)}catch(e){toast(e.message,true)}}
 const link=slug=>`${SITE}gallery.html?g=${slug}`;
 
@@ -256,11 +256,11 @@ function renderSite(){
 }
 async function upSite(kind,files,zone){
  files=[...files].filter(f=>f.type.startsWith('image/'));if(!files.length)return;if(kind=='about')files=files.slice(0,1);
- const st=zone.querySelector('.st'),bar=zone.querySelector('.prog i');zone.classList.add('busy');let i=0;
+ const st=zone.querySelector('.st'),bar=zone.querySelector('.prog i');zone.classList.add('busy');let i=0,ok=0;
  for(const f of files){st.textContent=`Загрузка ${++i}/${files.length}: ${f.name}`;
   const r=await fetch(`/api/site_upload?kind=${kind}&name=${encodeURIComponent(f.name)}`,{method:'POST',body:f});
-  if(!r.ok)toast((await r.json()).error,true);else S=await r.json();bar.style.width=(i/files.length*100)+'%'}
- zone.classList.remove('busy');toast(kind=='about'?'Фото «Обо мне» обновлено':`В слайдер добавлено: ${i}`);render();
+  if(!r.ok)toast((await r.json()).error,true);else{S=await r.json();ok++}bar.style.width=(i/files.length*100)+'%'}
+ zone.classList.remove('busy');if(ok)toast(kind=='about'?'Фото «Обо мне» обновлено':`В слайдер добавлено: ${ok}`);render();
 }
 const order=()=>[...document.querySelectorAll('#sgrid .sl')].map(x=>x.dataset.file);
 function render(){

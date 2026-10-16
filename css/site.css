@@ -14,6 +14,7 @@ a{color:inherit;text-decoration:none}
 .bgm{position:absolute;left:0;top:0;width:100%;z-index:0;pointer-events:none;will-change:transform}
 .bgm-wrap{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
 .bgm i{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform}
+@media (max-width:960px){.bgm i{filter:blur(60px)}}
 .bgm i b{position:absolute;inset:0;border-radius:50%;animation:drift 28s ease-in-out infinite alternate}
 @keyframes drift{to{transform:translate(8vw,6vh) scale(1.12)}}
 .fx{position:fixed;inset:0;pointer-events:none}
@@ -115,13 +116,11 @@ h1{margin:0;font:800 clamp(52px,9.4vw,152px)/1.05 var(--disp);letter-spacing:-.0
 
 /* жанры: трек-лист */
 .tracks{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.tr{display:grid;grid-template-columns:70px 1fr 1.3fr auto;gap:24px;align-items:baseline;padding:26px 8px;border-bottom:1px solid var(--line);transition:background .3s,padding .3s}
+.tr{display:grid;grid-template-columns:70px 1fr 1.6fr;gap:24px;align-items:baseline;padding:26px 8px;border-bottom:1px solid var(--line);transition:background .3s,padding .3s}
 .tr:hover{background:linear-gradient(90deg,rgba(255,170,100,.08),transparent 70%);padding-left:18px}
 .tr .mono{color:var(--amber)}
 .tr h3{margin:0;font:600 clamp(20px,2.2vw,30px)/1.1 var(--disp)}
 .tr p{margin:0;color:var(--ink2);font-size:.95rem}
-.tr__pr{font:600 .95rem/1 var(--disp);white-space:nowrap}
-.tr__pr small{display:block;font:400 .62rem/1.4 var(--mono);letter-spacing:.14em;color:var(--mut);text-transform:uppercase;margin-top:6px;text-align:right}
 
 /* архив съёмок */
 .arch{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:clamp(16px,2vw,28px)}
@@ -138,15 +137,14 @@ h1{margin:0;font:800 clamp(52px,9.4vw,152px)/1.05 var(--disp);letter-spacing:-.0
 /* процесс */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;list-style:none;margin:0;padding:0;counter-reset:s}
 .st{position:relative;padding:26px 22px 28px;border:1px solid var(--line);background:rgba(18,18,18,.35);backdrop-filter:blur(6px)}
-.st__tc{font:600 clamp(28px,3vw,44px)/1 var(--disp);color:var(--amber);text-shadow:0 0 18px rgba(255,170,100,.4);letter-spacing:-.02em}
-.st h3{margin:18px 0 8px;font:600 18px/1.2 var(--disp)}
+.st h3{margin:0 0 8px;font:600 18px/1.2 var(--disp)}
 .st p{margin:0;color:var(--ink2);font-size:.92rem}
 
 /* тарифы: плёнка */
 .filmsec{padding-left:0;padding-right:0}
 .filmsec .sec__head{padding:0 var(--pad)}
 .film{--fw:calc((100vw - 60px) / 3.35);position:relative;overflow:hidden;margin-top:20px}
-.film__track{display:flex;width:max-content;position:relative;left:50%;transform:translateX(-50%);
+.film__track{display:flex;width:max-content;position:relative;will-change:transform;
   background:#0c0a09;padding:64px 0;box-shadow:0 30px 70px -20px rgba(0,0,0,.85),0 0 100px -30px rgba(255,170,100,.3)}
 .holes{position:absolute;left:0;right:0;height:18px;display:flex;gap:18px;padding:0 10px;overflow:hidden;z-index:2}
 .holes--t{top:18px}.holes--b{bottom:18px}
@@ -187,15 +185,27 @@ h1{margin:0;font:800 clamp(52px,9.4vw,152px)/1.05 var(--disp);letter-spacing:-.0
 
 @media (max-width:960px){
   .about{grid-template-columns:1fr}.about__ph{max-width:460px}
-  .tr{grid-template-columns:44px 1fr;gap:6px 14px}.tr p{grid-column:2}.tr__pr{grid-column:2}.tr__pr small{text-align:left}
+  .tr{grid-template-columns:44px 1fr;gap:6px 14px}.tr p{grid-column:2}
   .steps{grid-template-columns:1fr 1fr}.cont{grid-template-columns:1fr 1fr}
-  .film{--fw:80vw;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
-  .film::-webkit-scrollbar{display:none}
-  .film__track{left:0;transform:none}
-  .fr{scroll-snap-align:center;aspect-ratio:auto;min-height:330px}
+  .film{--fw:78vw;touch-action:pan-y}
+  .fr{aspect-ratio:auto;min-height:340px}
   .reel{height:calc(68vw * 1.25 + 90px)}.sl{height:auto;width:68%}
   .sl.p{--x:-64%}.sl.n{--x:64%}
   .reel__nav{top:auto;bottom:0;transform:none}
 }
 @media (max-width:560px){.steps,.cont{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* без прямоугольной подсветки нажатия на телефоне и квадратной рамки фокуса */
+*{-webkit-tap-highlight-color:transparent}
+.key:focus{outline:none}.key:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:12px}
+.key:disabled{opacity:.35;pointer-events:none}
+.fr__price small{font:400 .5em var(--mono);letter-spacing:.1em;margin-left:3px;color:var(--ink2)}
+/* навигация плёнки */
+.film__nav{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:30px;color:var(--ink2)}
+.film__note{margin-top:18px}
+/* наверх */
+.totop{position:fixed;left:clamp(14px,2vw,28px);bottom:clamp(16px,3vh,32px);z-index:30;opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .3s,transform .3s,box-shadow .18s}
+.totop.on{opacity:1;pointer-events:auto;transform:none}
+.totop.on:hover{transform:translateY(2px)}
+@media (max-width:960px){.totop{width:44px;height:44px;font-size:17px}}

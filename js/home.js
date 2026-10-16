@@ -46,23 +46,40 @@
   /* ---------- тарифы на плёнке ---------- */
   const msg = (n) => 'https://t.me/ph_Plenkaa?text=' + encodeURIComponent(`Привет! Меня заинтересовал тариф «${n}» на сайте Plёnka Studio — хочу обсудить детали съёмки 📸`);
   const plans = [
-    { n: 'Фрагмент', m: 60, p: '4 900 ₽', l: ['1 зал на выбор', '15 кадров в авторской обработке'] },
-    { n: 'Секвенция', m: 120, p: '9 900 ₽', l: ['2 зала на выбор', '35 кадров в авторской обработке', 'Помощь в поиске визажиста — его услуги отдельно'] },
-    { n: 'Полная синхронизация', m: 180, p: '19 900 ₽', l: ['3 зала — любой можно заменить часом съёмки', '60 кадров в авторской обработке', 'Помощь в поиске визажиста и стилиста', 'Исходники — по желанию'] },
+    { n: 'Фрагмент', m: 60, u: 'мин', p: '4 900 ₽', l: ['1 зал на выбор', '15 кадров в авторской обработке'] },
+    { n: 'Секвенция', m: 120, u: 'мин', p: '9 900 ₽', l: ['2 зала на выбор', '35 кадров в авторской обработке', 'Помощь в поиске визажиста — его услуги отдельно'] },
+    { n: 'Полная синхронизация', m: 180, u: 'мин', p: '19 900 ₽', l: ['3 зала — любой можно заменить часом съёмки', '60 кадров в авторской обработке', 'Помощь в поиске визажиста и стилиста', 'Исходники — по желанию'] },
+    { n: 'Предметная', m: '10+', u: 'кадров', p: 'от 590 ₽<small>/кадр</small>', l: ['Белый фон, интерьер или с моделью', 'Для маркетплейсов, каталогов и соцсетей', 'Заказ от 10 кадров'] },
   ];
   const empty = (k) => `<div class="fr empty"><div class="fr__in"><span class="fr__no mono">▸ ${k}</span></div></div>`;
-  const plan = (x, i) => `<article class="fr"><div class="fr__in"><span class="fr__no mono">▸ ${12 + i}A</span><span class="fr__min">${x.m}<small>мин</small></span>
+  const plan = (x, i) => `<article class="fr"><div class="fr__in"><span class="fr__no mono">▸ ${12 + i}A</span><span class="fr__min">${x.m}<small>${x.u}</small></span>
     <h3>${x.n}</h3><ul>${x.l.map((t) => `<li>${t}</li>`).join('')}</ul>
     <div class="fr__foot"><span class="fr__price">${x.p}</span><a class="key key--sm" href="${msg(x.n)}" target="_blank" rel="noopener"><b></b><span>Выбрать</span></a></div></div></article>`;
   const track = $('#track');
-  const edgeT = Array.from({ length: 14 }, (_, i) => `PLЁNKA 400 ▸ ${8 + i}A &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ▸ ${9 + i}`).join(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ');
-  const edgeB = Array.from({ length: 14 }, () => '◂ SAFETY FILM &nbsp; 2018 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SPB').join(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ');
+  const edgeT = Array.from({ length: 16 }, (_, i) => `PLЁNKA 400 ▸ ${8 + i}A &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ▸ ${9 + i}`).join(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ');
+  const edgeB = Array.from({ length: 16 }, () => '◂ SAFETY FILM &nbsp; 2018 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SPB').join(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ');
   track.innerHTML = `<div class="holes holes--t"></div><div class="holes holes--b"></div><span class="edge edge--t">${edgeT}</span><span class="edge edge--b">${edgeB}</span>` +
-    empty('10A') + empty('11A') + plans.map(plan).join('') + empty('15A') + empty('16A');
+    empty('10A') + empty('11A') + plans.map(plan).join('') + empty('16A') + empty('17A');
   const holes = () => track.querySelectorAll('.holes').forEach((h) => { h.innerHTML = '<span></span>'.repeat(Math.ceil(track.scrollWidth / 42) + 2); });
   holes(); addEventListener('resize', holes);
-  const film = $('#film');
-  const center = () => { if (innerWidth <= 960) { const a = track.querySelector('article'); film.scrollLeft = a.offsetLeft - (innerWidth - a.offsetWidth) / 2; } };
-  center(); addEventListener('load', center);
 
+  // пошаговый слайдер: на компьютере видно 3 тарифа, на телефоне — 1; дальше крайних тарифов не листается
+  const film = $('#film'), cards = [...track.querySelectorAll('article')], cnt = $('#filmCount');
+  let fi = 0;
+  const vis = () => (innerWidth <= 960 ? 1 : 3);
+  const place = (anim = true) => {
+    const v = vis(), max = cards.length - v; fi = Math.max(0, Math.min(fi, max));
+    const a = cards[fi], z = cards[fi + v - 1];
+    const mid = (a.offsetLeft + z.offsetLeft + z.offsetWidth) / 2;
+    track.style.transition = anim ? 'transform .7s cubic-bezier(.2,.75,.2,1)' : 'none';
+    track.style.transform = `translateX(${(film.clientWidth / 2 - mid).toFixed(1)}px)`;
+    cnt.textContent = v === 1 ? `${pad(fi + 1)} / ${pad(cards.length)}` : `${pad(fi + 1)}–${pad(fi + v)} / ${pad(cards.length)}`;
+    document.querySelectorAll('[data-f]').forEach((b) => { b.disabled = (+b.dataset.f < 0 && fi === 0) || (+b.dataset.f > 0 && fi === max); });
+  };
+  document.querySelectorAll('[data-f]').forEach((b) => b.addEventListener('click', () => { fi += +b.dataset.f; place(); }));
+  let fx0 = null;
+  film.addEventListener('touchstart', (e) => { fx0 = e.touches[0].clientX; }, { passive: true });
+  film.addEventListener('touchend', (e) => { if (fx0 === null) return; const dx = e.changedTouches[0].clientX - fx0; if (Math.abs(dx) > 40) { fi += dx < 0 ? 1 : -1; place(); } fx0 = null; });
+  place(false); addEventListener('resize', () => place(false)); addEventListener('load', () => place(false));
+  if (document.fonts) document.fonts.ready.then(() => place(false));
 })();

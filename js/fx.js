@@ -20,7 +20,8 @@
   };
   const par = () => { const y = scrollY; document.querySelectorAll('.bgm').forEach((el) => { el.style.transform = `translate3d(0,${(y * el.dataset.k).toFixed(1)}px,0)`; }); };
   addEventListener('load', () => { build(); par(); }); build(); par();
-  addEventListener('resize', () => { build(); par(); });
+  let lastW = innerWidth, lastH = page.offsetHeight;
+  addEventListener('resize', () => { const h = page.offsetHeight; if (innerWidth !== lastW || Math.abs(h - lastH) > 200) { lastW = innerWidth; lastH = h; build(); } par(); });
   if (!reduce) addEventListener('scroll', par, { passive: true });
 
   /* ---------- линза: бочкообразное искажение + хроматическая аберрация ---------- */
@@ -32,7 +33,10 @@
       d.data[k] = 128 - u * r2 * 32; d.data[k + 1] = 128 - v * r2 * 32; d.data[k + 2] = 128; d.data[k + 3] = 255; }
     x.putImageData(d, 0, 0); return c.toDataURL(); })();
   let fid = 0;
+  // iPhone/Safari и телефоны рисуют SVG-фильтр на фото с ошибками (фото пропадает) — там линзу не включаем
+  const lensOK = matchMedia('(hover: hover) and (pointer: fine)').matches && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   function lens(el, strength = .06, ca = .45) {
+    if (!lensOK) return;
     const id = 'lens' + (++fid), f = document.createElementNS(NS, 'filter');
     f.id = id; f.setAttribute('filterUnits', 'userSpaceOnUse'); f.setAttribute('color-interpolation-filters', 'sRGB');
     f.innerHTML = '<feImage result="m" preserveAspectRatio="none"/>' +
@@ -71,5 +75,10 @@
     if (!reduce) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
-  window.PLENKA = { lens, rebuildBg: () => { build(); par(); } };
+  window.PLENKA = { lens, rebuildBg: () => { lastH = page.offsetHeight; build(); par(); } };
+
+  /* ---------- кнопка «наверх» ---------- */
+  const up = document.getElementById('toTop');
+  if (up) { const t = () => up.classList.toggle('on', scrollY > innerHeight * .8); addEventListener('scroll', t, { passive: true }); t();
+    up.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); }); }
 })();

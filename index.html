@@ -1,402 +1,119 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <script>try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t}catch(e){}</script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Plёnka Studio — фотограф</title>
-  <meta name="description" content="Plёnka Studio — фотограф: портрет, love story, семейные и предметные съёмки. Портфолио и галереи.">
-  <meta name="theme-color" content="#e8ecf0">
-  <meta property="og:title" content="Plёnka Studio — фотограф">
-  <meta property="og:description" content="Портрет, love story, семейные и предметные съёмки. Портфолио и галереи.">
-  <meta property="og:site_name" content="Plёnka Studio">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plёnka Studio — фотограф</title>
+<meta name="description" content="Plёnka Studio — фотограф из Санкт-Петербурга: портрет, love story, семейные, стрит и предметные съёмки. Портфолио и галереи.">
+<meta name="theme-color" content="#121212">
+<meta property="og:title" content="Plёnka Studio — фотограф">
+<meta property="og:description" content="Гранж-кино: портрет, love story, семейные и стрит-съёмки в Санкт-Петербурге.">
+<meta property="og:site_name" content="Plёnka Studio">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
 </head>
-<body class="is-booting">
+<body>
+<div class="fx fx--vig"></div><div class="fx fx--grain"></div><canvas id="dust" aria-hidden="true"></canvas>
+<div class="page">
+<div class="bgm-wrap" aria-hidden="true"><div class="bgm" id="bgFar"></div><div class="bgm" id="bgNear"></div></div>
 
-  <!-- Загрузочный экран -->
-  <div class="boot" id="boot" aria-hidden="true">
-    <div class="boot__inner">
-      <svg class="boot__logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
-      <pre class="boot__log" id="bootLog"></pre>
-      <div class="boot__bar"><span id="bootBar"></span></div>
-      <div class="boot__meta"><span>PLЁNKA OS v3.1</span><span id="bootPct">0%</span></div>
-    </div>
-    <button class="boot__skip" id="bootSkip" type="button">Пропустить ›</button>
+<main>
+<header class="hero" id="top">
+  <nav class="top"><div class="links mono"><a href="#about">Обо мне</a><a href="#archive">Архив</a><a href="#genres">Жанры</a><a href="#tariffs">Тарифы</a><a href="#process">Процесс</a><a href="#rules">Правила</a><a href="#contacts">Связь</a></div></nav>
+  <p class="mono kicker">Санкт-Петербург · с 2018</p>
+  <h1 class="glow" data-t="Plёnka">Plёnka</h1>
+  <p class="sub">studio</p>
+  <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <p class="lead">Гранж-кино: кадры, похожие на остановленную сцену из фильма — немного холодно, немного тепло и всегда что-то недосказано.</p>
+  <div class="btns"><a class="key" href="#archive"><b></b><span>Смотреть архив</span></a><a class="key key--dark" href="#tariffs"><b></b><span>Тарифы</span></a></div>
+  <span class="scroll mono">▼ перемотка</span>
+</header>
+
+
+<section class="sec" id="about"><div class="wrap about">
+  <figure class="about__ph"><div class="about__f" id="aboutF"><img id="aboutImg" alt="Саша, фотограф Plёnka"></div>
+    <figcaption class="mono"><span>Фотограф // <b>Саша</b></span><span>СПб</span></figcaption></figure>
+  <div>
+    <div class="sec__head" style="margin-bottom:28px"><div><span class="mono">// 01 — обо мне</span><h2 class="glow" data-t="Привет, я Саша">Привет, я Саша</h2></div></div>
+    <p class="big">Фотограф из Санкт-Петербурга, снимаю с 2018 года. Я делаю гранж-кино — кадры, похожие на остановленную сцену из фильма: немного холодно, немного тепло и всегда что-то недосказано.</p>
+    <p>Мне важнее настроение, чем место или повод. Приглушённый цвет, зерно, засветы и мягкий фокус — не ради эффекта, а чтобы кадр дышал. Радость, грусть, тихая задумчивость — я ловлю то, что вы чувствуете на самом деле.</p>
+    <p>Мой взгляд вырос из гранжа и пост-панка. А когда одного кадра мало, собираю из съёмки постер.</p>
+    <ul class="tags mono"><li>С 2018</li><li>Санкт-Петербург</li><li>Grunge / post-punk</li><li>Плёночная эстетика</li><li>Постеры</li></ul>
   </div>
+</div></section>
 
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="logo" viewBox="0 0 64 64">
-      <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" fill="none" stroke="currentColor" stroke-width="2.5"/>
-      <path d="M32 14 45 21.5 32 29 19 21.5Z" fill="currentColor" opacity=".9"/>
-      <path d="M19 25.5 30 32v13l-11-6.5Z" fill="currentColor" opacity=".55"/>
-      <path d="M45 25.5 34 32v13l11-6.5Z" fill="currentColor" opacity=".3"/>
-    </symbol>
-  </svg>
+<section class="sec" id="reel"><div class="wrap">
+  <div class="sec__head"><div><span class="mono">// 02 — избранное</span><h2 class="glow" data-t="Кадры, которые я пересматриваю">Кадры, которые я пересматриваю</h2></div></div>
+  <div class="reel" id="reelStage">
+    <div class="reel__osd mono"><span>● PLAY</span><span id="reelCount">CH 01 / 05</span></div>
+    <div class="reel__s" id="reelS"></div>
+    <div class="reel__nav"><button class="key key--dark key--ico" data-r="-1" aria-label="Предыдущий">‹</button><button class="key key--dark key--ico" data-r="1" aria-label="Следующий">›</button></div>
+  </div>
+</div></section>
 
-  <canvas class="bg-canvas" id="bg" aria-hidden="true"></canvas>
-  <div class="scanlines" aria-hidden="true"></div>
+<section class="sec" id="archive"><div class="wrap">
+  <div class="sec__head"><div><span class="mono">// 03 — архив</span><h2 class="glow" data-t="Архив съёмок">Архив съёмок</h2></div><p>Откройте съёмку, чтобы посмотреть фотографии.</p></div>
+  <div class="arch" id="arch"></div>
+</div></section>
 
-  <header class="topbar" id="topbar">
-    <div class="topbar__inner">
-      <a class="brand" href="#top" aria-label="Plёnka Studio — на главную">
-        <svg class="brand__logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
-        <span class="brand__name">PLЁNKA</span>
-        <span class="brand__sub mono">photo&nbsp;studio</span>
-      </a>
-      <nav class="nav" id="nav" aria-label="Основная навигация">
-        <a href="#about">Обо мне</a>
-        <a href="#services">Секвенции</a>
-        <a href="#gallery">Архив</a>
-        <a href="#process">Протокол</a>
-        <a href="#pricing">Тарифы</a>
-        <a href="#rules">Правила</a>
-        <a href="#contacts">Контакты</a>
-        <a class="btn btn--sm nav__cta" href="#contacts">Связаться</a>
-      </nav>
-      <button class="theme-sw" id="themeBtn" type="button" aria-label="Переключить тему" title="Светлая / тёмная тема">
-        <span class="theme-sw__t theme-sw__t--day">DAY</span><span class="theme-sw__t theme-sw__t--night">NIGHT</span>
-        <span class="theme-sw__orb"></span>
-      </button>
-      <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
-        <span></span><span></span>
-      </button>
-    </div>
-  </header>
+<section class="sec" id="genres"><div class="wrap">
+  <div class="sec__head"><div><span class="mono">// 04 — жанры</span><h2 class="glow" data-t="Что снимаю">Что снимаю</h2></div><p>Любой жанр можно снять в любом тарифе. Не нашли нужный? Напишите в Telegram — соберём сценарий под вас.</p></div>
+  <ol class="tracks">
+    <li class="tr"><span class="mono">A1</span><h3>Портрет</h3><p>Работа с позированием и светом — от спокойного портрета до fashion и beauty-образов.</p><span class="tr__pr">от 4 900 ₽<small>любой тариф</small></span></li>
+    <li class="tr"><span class="mono">A2</span><h3>Love story</h3><p>История двоих: нежные кадры в студии или на выезде. Помогу расслабиться даже тем, кто стесняется камеры.</p><span class="tr__pr">от 4 900 ₽<small>любой тариф</small></span></li>
+    <li class="tr"><span class="mono">A3</span><h3>Семейная</h3><p>Три поколения в одном кадре, дети, питомцы — живые эмоции без натянутых улыбок.</p><span class="tr__pr">от 4 900 ₽<small>любой тариф</small></span></li>
+    <li class="tr"><span class="mono">B1</span><h3>Стрит</h3><p>Прогулка по городу: улицы, случайный свет, отражения и живые кадры в движении.</p><span class="tr__pr">от 4 900 ₽<small>любой тариф</small></span></li>
+    <li class="tr"><span class="mono">B2</span><h3>Предметная</h3><p>Товары для маркетплейсов, каталогов и соцсетей: на белом фоне, в интерьере, с моделью.</p><span class="tr__pr">от 590 ₽<small>за кадр</small></span></li>
+  </ol>
+</div></section>
 
-  <aside class="sync" aria-hidden="true">
-    <span class="sync__label mono">Синхронизация</span>
-    <span class="sync__track"><span class="sync__fill" id="syncFill"></span></span>
-    <span class="sync__value mono" id="syncValue">0%</span>
-  </aside>
+<section class="sec filmsec" id="tariffs">
+  <div class="wrap"><div class="sec__head"><div><span class="mono">// 05 — тарифы</span><h2 class="glow" data-t="Тарифы">Тарифы</h2></div><p>Плёнка на просвет: в каждом кадре — свой тариф. Аренда залов входит в стоимость.</p></div></div>
+  <div class="film" id="film"><div class="film__track" id="track"></div></div>
+  <p class="film__note mono">Любой жанр — в любом тарифе</p>
+</section>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero" id="top">
-      <div class="container hero__grid">
-        <div class="hero__text">
-          <p class="mono tag reveal">// Последовательность 01 — Начало</p>
-          <h1 class="hero__title reveal">
-            <span class="glitch" data-text="Plёnka">Plёnka</span><br><span class="hero__sub">Studio</span>
-          </h1>
-          <p class="hero__lead reveal">Фотостудия, в которой каждый кадр становится воспоминанием, к&nbsp;которому хочется возвращаться снова и&nbsp;снова.</p>
-          <p class="mono typed reveal" aria-live="off"><span id="typed"></span><span class="caret"></span></p>
-          <div class="hero__actions reveal">
-            <a class="btn" href="#pricing">Тарифы</a>
-            <a class="btn btn--ghost" href="#gallery">Открыть архив</a>
-          </div>
-          <dl class="stats reveal">
-            <div><dt class="mono">Съёмок</dt><dd data-count="160">0</dd></div>
-            <div><dt class="mono">Лет опыта</dt><dd data-count="8">0</dd></div>
-            <div><dt class="mono">Часов до выдачи</dt><dd data-count="72">0</dd></div>
-          </dl>
-        </div>
+<section class="sec" id="process"><div class="wrap">
+  <div class="sec__head"><div><span class="mono">// 06 — процесс</span><h2 class="glow" data-t="Как проходит съёмка">Как проходит съёмка</h2></div></div>
+  <ol class="steps">
+    <li class="st"><div class="st__tc">00:01</div><h3>Сообщение</h3><p>Напишите мне в Telegram — обсудим, какой будет ваша съёмка.</p></li>
+    <li class="st"><div class="st__tc">00:02</div><h3>Бриф</h3><p>Обсуждаем идею, локацию, образы и референсы. Присылаю мудборд.</p></li>
+    <li class="st"><div class="st__tc">00:03</div><h3>Съёмка</h3><p>Веду вас по кадрам — уметь позировать не нужно.</p></li>
+    <li class="st"><div class="st__tc">00:72</div><h3>Выдача</h3><p>Через 72 часа — отобранные кадры в авторской обработке.</p></li>
+  </ol>
+</div></section>
 
-        <div class="hero__visual reveal">
-          <div class="frame hud">
-            <canvas id="helix" aria-hidden="true"></canvas>
-            <canvas id="cam3d" aria-label="Взрыв-схема фотоаппарата"></canvas>
-            <div class="frame__label frame__label--tl mono">Субъект: <b>вы</b></div>
-            <div class="frame__label frame__label--tr mono">Кадр&nbsp;//&nbsp;<span id="frameNo">0001</span></div>
-            <div class="frame__label frame__label--bl mono">Фокус<br><b class="ok">захвачен</b></div>
-            <div class="frame__label frame__label--br mono">ISO 100<br><span id="fstop">f/1.8</span> · 1/200</div>
-          </div>
-        </div>
-      </div>
-      <a class="scroll-hint mono" href="#services">Прокрутите, чтобы синхронизироваться <span>↓</span></a>
-    </section>
+<section class="sec" id="rules"><div class="wrap">
+  <div class="sec__head"><div><span class="mono">// 07 — правила</span><h2 class="glow" data-t="Правила съёмки">Правила съёмки</h2></div><p>Коротко о том, как всё устроено, — чтобы съёмка прошла спокойно для нас обоих.</p></div>
+  <div class="rules">
+    <article class="rule"><h3><span class="mono">01</span>Бронирование</h3><p>Дата закрепляется после предоплаты 30% от стоимости тарифа. Остаток — в день съёмки.</p></article>
+    <article class="rule"><h3><span class="mono">02</span>Отмена и перенос</h3><p>Отменить или перенести съёмку можно не позднее чем за 3 дня — предоплата вернётся или перейдёт на новую дату. Позже предоплата не возвращается. Болезнь и форс-мажор решаем индивидуально.</p></article>
+    <article class="rule"><h3><span class="mono">03</span>Опоздание</h3><p>Время съёмки из-за опоздания не продлевается. Опоздание больше 30 минут без предупреждения — съёмка считается отменённой.</p></article>
+    <article class="rule"><h3><span class="mono">04</span>Отбор кадров</h3><p>Кадры для обработки я отбираю сам — так съёмка остаётся цельной историей, в моём видении и атмосфере.</p></article>
+    <article class="rule"><h3><span class="mono">05</span>Исходники</h3><p>Исходники не входят в съёмку, но их можно выкупить полным комплектом — 3 000 ₽. В тарифе «Полная синхронизация» — бесплатно, если захотите. Технический брак не передаётся.</p></article>
+    <article class="rule"><h3><span class="mono">06</span>Обработка</h3><p>Авторская цветокоррекция, свет и кожа. Изменение фигуры и черт лица, замена фона и коллажи не входят.</p></article>
+    <article class="rule"><h3><span class="mono">07</span>Публикация</h3><p>Я предпочитаю показывать свои работы, поэтому оставляю за собой право публиковать кадры в портфолио и соцсетях. Если важна приватность — скажите до съёмки. Публикуя фото, пожалуйста, отмечайте автора. Реклама и коммерция — по согласованию.</p></article>
+    <article class="rule"><h3><span class="mono">08</span>Хранение</h3><p>Ссылка на скачивание действует 30 дней — сохраните фото сразу. Архив съёмки храню 1 год.</p></article>
+  </div>
+</div></section>
 
-    <!-- ABOUT -->
-    <section class="section about" id="about">
-      <div class="container about__grid">
-        <figure class="about__photo hud reveal" id="aboutPhoto">
-          <div class="about__frame"><img id="aboutImg" alt="Саша, фотограф Plёnka Studio" loading="lazy"><span class="crt"><span class="crt__rec">REC</span></span></div>
-          <figcaption class="mono">Оператор // <b>Саша</b> · СПб</figcaption>
-        </figure>
-        <div class="about__text">
-          <header class="section-head reveal">
-            <p class="mono tag">// Досье оператора</p>
-            <h2>Привет, я Саша</h2>
-          </header>
-          <p class="about__lead reveal">Фотограф из Санкт-Петербурга, снимаю с&nbsp;2018 года. Я делаю гранж-кино — кадры, похожие на остановленную сцену из фильма: немного холодно, немного тепло и&nbsp;всегда что-то недосказано.</p>
-          <p class="reveal">Мне важнее настроение, чем место или повод. Приглушённый цвет, зерно, засветы и&nbsp;мягкий фокус — не ради эффекта, а&nbsp;чтобы кадр дышал. Радость, грусть, тихая задумчивость — я ловлю то, что вы чувствуете на самом деле.</p>
-          <p class="reveal">Мой взгляд вырос из гранжа и&nbsp;пост-панка. А&nbsp;когда одного кадра мало, собираю из съёмки постер.</p>
-          <ul class="about__facts mono reveal">
-            <li>С 2018</li><li>Санкт-Петербург</li><li>Grunge / post-punk</li><li>Плёночная эстетика</li><li>Постеры</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+<section class="sec" id="contacts"><div class="wrap">
+  <div class="sec__head"><div><span class="mono">// 08 — связь</span><h2 class="glow" data-t="Связаться со мной">Связаться со мной</h2></div></div>
+  <div class="cont">
+    <a class="ct" href="tel:+79117030349"><span class="mono">Телефон</span><b>+7 (911) 703-03-49</b><span>Звонок или сообщение</span></a>
+    <a class="ct" href="https://t.me/ph_Plenkaa" target="_blank" rel="noopener"><span class="mono">Telegram</span><b>@ph_Plenkaa</b><span>Личные сообщения</span></a>
+    <a class="ct" href="https://t.me/ph_plenka" target="_blank" rel="noopener"><span class="mono">Канал</span><b>t.me/ph_plenka</b><span>Новые съёмки и анонсы</span></a>
+    <a class="ct" href="https://www.instagram.com/ph.plenka/" target="_blank" rel="noopener"><span class="mono">Instagram</span><b>@ph.plenka</b><span>Портфолио</span></a>
+  </div>
+</div></section>
 
-    <!-- SHOWREEL -->
-    <section class="section section--alt reel" id="reel" hidden>
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// Избранные кадры</p>
-          <h2>Кадры, которые я пересматриваю</h2>
-        </header>
-        <div class="reel__stage reveal" id="reelStage" aria-roledescription="слайдер" aria-label="Лучшие кадры">
-          <div class="reel__slides" id="reelSlides"></div>
-          <div class="reel__grain" aria-hidden="true"></div>
-          <button class="reel__btn reel__btn--prev" type="button" data-reel="-1" aria-label="Предыдущий кадр">‹</button>
-          <button class="reel__btn reel__btn--next" type="button" data-reel="1" aria-label="Следующий кадр">›</button>
-          <div class="reel__hud mono"><span>REC ●</span><span id="reelCount">01 / 05</span></div>
-          <div class="reel__bar"><i id="reelBar"></i></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section class="section" id="services">
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// 02 · Секвенции памяти</p>
-          <h2>Выберите воспоминание</h2>
-          <p class="section-head__lead">Каждая съёмка — отдельная секвенция со своим светом, атмосферой и&nbsp;историей. Любой жанр можно снять в&nbsp;любом тарифе. Не нашли нужный? Напишите мне в&nbsp;Telegram — соберём сценарий под вас.</p>
-        </header>
-
-        <div class="cards">
-          <article class="card reveal">
-            <span class="card__num mono">SEQ-01</span>
-            <h3>Портрет</h3>
-            <p>Индивидуальная съёмка с работой над позированием и светом — от спокойного портрета до fashion и beauty-образов. Для себя, для портфолио, для соцсетей.</p>
-            <ul class="card__meta mono"><li>В любом тарифе</li><li>от 4 900 ₽</li></ul>
-          </article>
-          <article class="card reveal">
-            <span class="card__num mono">SEQ-02</span>
-            <h3>Love story</h3>
-            <p>История двоих: нежные кадры в студии или на выезде. Помогу расслабиться даже тем, кто стесняется камеры.</p>
-            <ul class="card__meta mono"><li>В любом тарифе</li><li>от 4 900 ₽</li></ul>
-          </article>
-          <article class="card reveal">
-            <span class="card__num mono">SEQ-03</span>
-            <h3>Семейная</h3>
-            <p>Три поколения в одном кадре, дети, питомцы — живые эмоции без натянутых улыбок.</p>
-            <ul class="card__meta mono"><li>В любом тарифе</li><li>от 4 900 ₽</li></ul>
-          </article>
-          <article class="card reveal">
-            <span class="card__num mono">SEQ-04</span>
-            <h3>Стрит</h3>
-            <p>Прогулка по городу: улицы, случайный свет, отражения и живые кадры в движении — вместо залов локации.</p>
-            <ul class="card__meta mono"><li>В любом тарифе</li><li>от 4 900 ₽</li></ul>
-          </article>
-          <article class="card reveal">
-            <span class="card__num mono">SEQ-05</span>
-            <h3>Предметная</h3>
-            <p>Товары для маркетплейсов, каталогов и соцсетей: на белом фоне, в интерьере, с моделью.</p>
-            <ul class="card__meta mono"><li>Отдельный формат</li><li>от 590 ₽/кадр</li></ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- GALLERY -->
-    <section class="section section--alt" id="gallery">
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// 03 · Архив воспоминаний</p>
-          <h2>Восстановленные фрагменты</h2>
-          <p class="section-head__lead">Откройте съёмку, чтобы посмотреть фотографии.</p>
-        </header>
-
-        <div class="gcards" id="galleryGrid"></div>
-      </div>
-    </section>
-
-    <!-- PROCESS -->
-    <section class="section" id="process">
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// 04 · Протокол синхронизации</p>
-          <h2>Как проходит съёмка</h2>
-        </header>
-        <ol class="steps">
-          <li class="step reveal">
-            <span class="step__node"></span>
-            <span class="step__num mono">01</span>
-            <h3>Сообщение</h3>
-            <p>Напишите мне в <a href="https://t.me/ph_Plenkaa" target="_blank" rel="noopener">Telegram</a> — обсудим, какой будет ваша съёмка.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__node"></span>
-            <span class="step__num mono">02</span>
-            <h3>Бриф</h3>
-            <p>Обсуждаем идею, локацию, образы и референсы. Присылаю мудборд.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__node"></span>
-            <span class="step__num mono">03</span>
-            <h3>Съёмка</h3>
-            <p>Веду вас по кадрам — уметь позировать не нужно.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__node"></span>
-            <span class="step__num mono">04</span>
-            <h3>Выдача</h3>
-            <p>Через 72 часа — отобранные кадры в авторской обработке.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- PRICING -->
-    <section class="section section--alt" id="pricing">
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// 05 · Уровни доступа</p>
-          <h2>Тарифы</h2>
-        </header>
-        <div class="plans">
-          <article class="plan reveal">
-            <p class="plan__code mono">Уровень 1</p>
-            <h3>Фрагмент</h3>
-            <p class="plan__price"><b>4 900</b> ₽</p>
-            <ul>
-              <li>1 час съёмки</li>
-              <li>1 зал на выбор</li>
-              <li>15 фото в авторской обработке</li>
-            </ul>
-            <a class="btn btn--ghost btn--block" href="https://t.me/ph_Plenkaa?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%9C%D0%B5%D0%BD%D1%8F%20%D0%B7%D0%B0%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BE%D0%B2%D0%B0%D0%BB%20%D1%82%D0%B0%D1%80%D0%B8%D1%84%20%C2%AB%D0%A4%D1%80%D0%B0%D0%B3%D0%BC%D0%B5%D0%BD%D1%82%C2%BB%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82%D0%B5%20Pl%D1%91nka%20Studio%20%E2%80%94%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B4%D0%B5%D1%82%D0%B0%D0%BB%D0%B8%20%D1%81%D1%8A%D1%91%D0%BC%D0%BA%D0%B8%20%F0%9F%93%B8" target="_blank" rel="noopener">Выбрать</a>
-          </article>
-          <article class="plan plan--featured reveal">
-            <p class="plan__badge mono">Оптимальная синхронизация</p>
-            <p class="plan__code mono">Уровень 2</p>
-            <h3>Секвенция</h3>
-            <p class="plan__price"><b>9 900</b> ₽</p>
-            <ul>
-              <li>2 часа съёмки</li>
-              <li>2 зала на выбор</li>
-              <li>35 фото в авторской обработке</li>
-              <li>Помощь в поиске визажиста <span class="plan__note">услуги визажиста оплачиваются отдельно</span></li>
-            </ul>
-            <a class="btn btn--light btn--block" href="https://t.me/ph_Plenkaa?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%9C%D0%B5%D0%BD%D1%8F%20%D0%B7%D0%B0%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BE%D0%B2%D0%B0%D0%BB%20%D1%82%D0%B0%D1%80%D0%B8%D1%84%20%C2%AB%D0%A1%D0%B5%D0%BA%D0%B2%D0%B5%D0%BD%D1%86%D0%B8%D1%8F%C2%BB%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82%D0%B5%20Pl%D1%91nka%20Studio%20%E2%80%94%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B4%D0%B5%D1%82%D0%B0%D0%BB%D0%B8%20%D1%81%D1%8A%D1%91%D0%BC%D0%BA%D0%B8%20%F0%9F%93%B8" target="_blank" rel="noopener">Выбрать</a>
-          </article>
-          <article class="plan reveal">
-            <p class="plan__code mono">Уровень 3</p>
-            <h3>Полная синхронизация</h3>
-            <p class="plan__price"><b>19 900</b> ₽</p>
-            <ul>
-              <li>3 часа съёмки</li>
-              <li>3 зала на выбор — любой можно заменить дополнительным часом съёмки</li>
-              <li>60 фото в авторской обработке</li>
-              <li>Помощь в поиске визажиста и стилиста <span class="plan__note">их услуги оплачиваются отдельно</span></li>
-              <li>Исходники — по вашему желанию</li>
-            </ul>
-            <a class="btn btn--ghost btn--block" href="https://t.me/ph_Plenkaa?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%9C%D0%B5%D0%BD%D1%8F%20%D0%B7%D0%B0%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BE%D0%B2%D0%B0%D0%BB%20%D1%82%D0%B0%D1%80%D0%B8%D1%84%20%C2%AB%D0%9F%D0%BE%D0%BB%D0%BD%D0%B0%D1%8F%20%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F%C2%BB%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82%D0%B5%20Pl%D1%91nka%20Studio%20%E2%80%94%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B4%D0%B5%D1%82%D0%B0%D0%BB%D0%B8%20%D1%81%D1%8A%D1%91%D0%BC%D0%BA%D0%B8%20%F0%9F%93%B8" target="_blank" rel="noopener">Выбрать</a>
-          </article>
-        </div>
-        <p class="plans__note mono reveal">Любой жанр — в любом тарифе · аренда залов входит в стоимость</p>
-      </div>
-    </section>
-
-    <!-- RULES -->
-    <section class="section" id="rules">
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// 06 · Протокол доступа</p>
-          <h2>Правила съёмки</h2>
-          <p class="section-head__lead">Коротко о том, как всё устроено, — чтобы съёмка прошла спокойно для нас обоих.</p>
-        </header>
-        <div class="rules">
-          <article class="rule reveal">
-            <span class="rule__num mono">01 · Бронирование</span>
-            <p>Дата закрепляется после предоплаты 30% от стоимости тарифа. Остаток — в&nbsp;день съёмки.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">02 · Отмена и перенос</span>
-            <p>Отменить или перенести съёмку можно не позднее чем за 3 дня — предоплата вернётся или перейдёт на новую дату. Позже предоплата не возвращается. Болезнь и форс-мажор решаем индивидуально.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">03 · Опоздание</span>
-            <p>Время съёмки из-за опоздания не продлевается. Опоздание больше 30 минут без предупреждения — съёмка считается отменённой.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">04 · Отбор кадров</span>
-            <p>Кадры для обработки я отбираю сам — так съёмка остаётся цельной историей, в&nbsp;моём видении и&nbsp;атмосфере.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">05 · Исходники</span>
-            <p>Исходники не входят в съёмку, но их можно выкупить полным комплектом — 3&nbsp;000&nbsp;₽. В&nbsp;тарифе «Полная синхронизация» — бесплатно, если захотите. Технический брак (смаз, закрытые глаза) не передаётся.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">06 · Обработка</span>
-            <p>Авторская цветокоррекция, свет и кожа. Изменение фигуры и черт лица, замена фона и коллажи не входят.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">07 · Публикация</span>
-            <p>Я предпочитаю показывать свои работы, поэтому оставляю за собой право публиковать кадры со съёмки в&nbsp;портфолио и&nbsp;соцсетях. Если для вас важна приватность — скажите об этом до съёмки, и&nbsp;мы договоримся. Публикуя фото у&nbsp;себя, пожалуйста, отмечайте автора. Использование в&nbsp;рекламе и&nbsp;коммерческих целях — по отдельному согласованию.</p>
-          </article>
-          <article class="rule reveal">
-            <span class="rule__num mono">08 · Хранение</span>
-            <p>Ссылка на скачивание действует 30 дней — сохраните фото сразу. Архив съёмки храню 1 год.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACTS -->
-    <section class="section section--alt" id="contacts">
-      <div class="container">
-        <header class="section-head reveal">
-          <p class="mono tag">// 07 · Координаты</p>
-          <h2>Связаться со мной</h2>
-        </header>
-        <div class="contacts">
-          <div class="contact hud reveal">
-            <p class="mono tag">Связь</p>
-            <p><a href="tel:+79117030349">+7 (911) 703-03-49</a></p>
-            <p class="mono coords">Звонок или сообщение</p>
-          </div>
-          <div class="contact hud reveal">
-            <p class="mono tag">Telegram</p>
-            <p><a href="https://t.me/ph_Plenkaa" target="_blank" rel="noopener">@ph_Plenkaa</a></p>
-            <p class="mono coords">Личные сообщения</p>
-          </div>
-          <div class="contact hud reveal">
-            <p class="mono tag">Канал</p>
-            <p><a href="https://t.me/ph_plenka" target="_blank" rel="noopener">t.me/ph_plenka</a></p>
-            <p class="mono coords">Новые съёмки и анонсы</p>
-          </div>
-          <div class="contact hud reveal">
-            <p class="mono tag">Instagram</p>
-            <p><a href="https://www.instagram.com/ph.plenka/" target="_blank" rel="noopener">@ph.plenka</a></p>
-            <p class="mono coords">Портфолио</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer__inner">
-      <span class="brand brand--footer">
-        <svg class="brand__logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo"/></svg>
-        <span class="brand__name">PLЁNKA</span>
-      </span>
-      <p class="mono">© <span id="year"></span> Plёnka Studio</p>
-    </div>
-  </footer>
-
-  <!-- Лайтбокс -->
-  <dialog class="lightbox" id="lightbox" aria-label="Просмотр фотографии">
-    <div class="lightbox__frame hud">
-      <img id="lbImg" alt="">
-      <p class="lightbox__caption mono" id="lbCaption"></p>
-    </div>
-    <button class="lightbox__btn lightbox__btn--prev" type="button" data-lb="prev" aria-label="Предыдущее фото">‹</button>
-    <button class="lightbox__btn lightbox__btn--next" type="button" data-lb="next" aria-label="Следующее фото">›</button>
-    <button class="lightbox__close mono" type="button" data-lb="close" aria-label="Закрыть">Закрыть ✕</button>
-  </dialog>
-
-  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="js/config.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/portfolio.js" defer></script>
-  <script src="js/camera3d.js" defer></script>
+</main>
+<footer class="foot mono"><span>© <span id="year">2026</span> Plёnka Studio</span><span>Санкт-Петербург</span></footer>
+</div>
+<script src="js/fx.js"></script>
+<script src="js/home.js"></script>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
 </body>
 </html>

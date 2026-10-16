@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" fill="#f4f6f8" stroke="#15202b" stroke-width="3"/>
-  <path d="M32 14 45 21.5 32 29 19 21.5Z" fill="#1a9cc6"/>
-  <path d="M19 25.5 30 32v13l-11-6.5Z" fill="#15202b" opacity=".7"/>
-  <path d="M45 25.5 34 32v13l11-6.5Z" fill="#15202b" opacity=".35"/>
+  <defs><radialGradient id="g" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#ffd6a3"/><stop offset=".55" stop-color="#e9a63c"/><stop offset="1" stop-color="#7a2232"/></radialGradient></defs>
+  <rect width="64" height="64" rx="14" fill="#121212"/>
+  <rect x="10" y="14" width="44" height="36" rx="4" fill="#1a1410"/>
+  <g fill="#f3e2c2"><rect x="13" y="17" width="5" height="4" rx="1"/><rect x="22" y="17" width="5" height="4" rx="1"/><rect x="31" y="17" width="5" height="4" rx="1"/><rect x="40" y="17" width="5" height="4" rx="1"/><rect x="13" y="43" width="5" height="4" rx="1"/><rect x="22" y="43" width="5" height="4" rx="1"/><rect x="31" y="43" width="5" height="4" rx="1"/><rect x="40" y="43" width="5" height="4" rx="1"/></g>
+  <rect x="15" y="24" width="34" height="16" rx="2" fill="url(#g)"/>
 </svg>

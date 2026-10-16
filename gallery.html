@@ -1,165 +1,145 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><script>try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t}catch(e){}</script><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>Галерея — Plёnka Studio</title><link rel="icon" href="assets/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#121212">
+<title>Галерея — Plёnka Studio</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
 <style>
-:root{--ink:#111;--mut:#777;--line:#e6e6e6}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;font:15px Montserrat,system-ui,sans-serif;color:var(--ink);background:#fff}
-.hero{height:100vh;min-height:420px;display:flex;align-items:flex-end;justify-content:center;text-align:center;color:#fff;background:#222 center/cover;position:relative;padding:0 20px 90px}
-.hero:before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
-.hero>*{position:relative}
-h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500}
-h1{font-size:clamp(40px,7vw,72px);margin:.2em 0}.hero p{margin:0}
-.down{position:absolute;bottom:24px;left:50%;color:#fff;text-decoration:none;font-size:28px}
-.bar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 48px;gap:16px;flex-wrap:wrap}
-.tabs{display:flex;gap:28px;overflow-x:auto}
-.tabs a{padding:22px 0;color:var(--mut);font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer}
-.tabs a.on{color:var(--ink);border-color:var(--ink)}
-.acts{display:flex;gap:12px;align-items:center;position:relative}
-.acts button{font:inherit;background:none;border:1px solid transparent;padding:10px 16px;cursor:pointer;border-radius:6px;color:var(--ink)}
-#dl{border-color:var(--ink);font-weight:500}
-#menu{position:absolute;right:0;top:100%;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.12);border-radius:8px;padding:8px;min-width:230px}
-#menu button{display:block;width:100%;text-align:left}#menu small{display:block;color:var(--mut);font-size:12px}
-main{padding:0 48px 80px}section{padding-top:56px;scroll-margin-top:70px}
-h2{text-align:center;font-size:40px;margin:0 0 32px}
-.grid{columns:4 240px;column-gap:20px}
-.ph{position:relative;margin:0 0 20px;break-inside:avoid;cursor:zoom-in}.ph img{width:100%;display:block}
-.ph a{position:absolute;right:10px;bottom:10px;background:#fff;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;opacity:0;transition:.2s;text-decoration:none;color:#111}
-.ph:hover a{opacity:1}@media(hover:none){.ph a{opacity:1}}
-dialog{border:0;padding:0;max-width:100vw;max-height:100vh;width:100vw;height:100vh;overflow:hidden;
- background:repeating-linear-gradient(0deg,rgba(21,32,43,.035) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 50% 0%,#fff 0%,#e8ecf0 65%)}
-dialog:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(21,32,43,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(21,32,43,.07) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at 50% 50%,transparent 30%,#000 90%)}
-dialog::backdrop{background:#e8ecf0}
-dialog[open]{animation:lbIn .35s cubic-bezier(.2,.7,.2,1)}
-@keyframes lbIn{from{opacity:0}}
-dialog img{position:absolute;inset:44px 72px;width:calc(100% - 144px);height:calc(100% - 88px);object-fit:contain;filter:drop-shadow(0 18px 40px rgba(21,32,43,.25))}
-.lb{position:absolute;z-index:2;color:#15202b;background:rgba(255,255,255,.7);border:1px solid rgba(21,32,43,.24);width:48px;height:48px;display:grid;place-items:center;font-size:26px;line-height:1;cursor:pointer;text-decoration:none;transition:.25s}
-.lb:hover{border-color:#1a9cc6;color:#1a9cc6;background:#fff}
-.lb:focus:not(:focus-visible){outline:none}
-.lbcnt{position:absolute;left:24px;top:22px;z-index:2;font:600 11px/1 "JetBrains Mono",Consolas,monospace;letter-spacing:.14em;color:#1a9cc6}
-@media(max-width:700px){dialog img{inset:70px 8px;width:calc(100% - 16px);height:calc(100% - 140px)}.lb[data-a=p],.lb[data-a=n]{top:auto!important;bottom:12px}}
-@media(max-width:700px){.bar,main{padding:0 16px}.grid{columns:2 140px}}
-.home{position:absolute;top:22px;left:28px;z-index:2;color:#fff;text-decoration:none;font-size:13px;letter-spacing:.18em;text-transform:uppercase;display:flex;gap:10px;align-items:center;padding:8px 14px;border:1px solid rgba(255,255,255,.45);border-radius:999px;backdrop-filter:blur(6px);background:rgba(0,0,0,.15);transition:.25s}
-.home:hover{background:#fff;color:#111}
-.back{color:var(--ink);text-decoration:none;font-weight:500;padding:22px 0;white-space:nowrap;margin-right:8px}
-.back:hover{color:var(--mut)}
-.left{display:flex;align-items:center;gap:24px;min-width:0}
-@media(max-width:700px){.home{top:14px;left:14px}.back span{display:none}}
+/* обложка */
+.ghero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:0 var(--pad) 110px;overflow:hidden}
+.ghero__bg{position:absolute;inset:0;background:#0d0b0a center/cover;filter:sepia(.18) saturate(.95) brightness(.62)}
+.ghero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,.25),rgba(18,18,18,.15) 40%,rgba(18,18,18,.92));pointer-events:none}
+.ghero>*:not(.ghero__bg){position:relative;z-index:2}
+.ghero .mono{color:var(--amber)}
+.ghero h1{margin:14px 0 10px;font:800 clamp(38px,7vw,110px)/1.08 var(--disp);letter-spacing:-.02em}
+.ghero .by{color:var(--ink2)}
+.down{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:2;color:var(--mut)}
+/* панель */
+.bar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:14px var(--pad);
+  background:rgba(18,18,18,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.left{display:flex;align-items:center;gap:26px;min-width:0}
+.back{color:var(--ink2);white-space:nowrap;transition:color .25s,text-shadow .25s}
+.back:hover{color:var(--amber);text-shadow:0 0 12px rgba(255,180,106,.6)}
+.tabs{display:flex;gap:24px;overflow-x:auto;scrollbar-width:none}
+.tabs a{padding:8px 0;color:var(--mut);white-space:nowrap;cursor:pointer;border-bottom:1px solid transparent;transition:color .25s}
+.tabs a.on{color:var(--amber);border-color:var(--amber);text-shadow:0 0 10px rgba(255,180,106,.5)}
+.acts{display:flex;gap:14px;align-items:center;position:relative}
+#menu{position:absolute;right:0;top:calc(100% + 14px);min-width:250px;padding:8px;background:rgba(24,20,17,.96);border:1px solid var(--line);box-shadow:0 30px 60px -20px #000}
+#menu button{display:block;width:100%;text-align:left;padding:12px 14px;background:none;border:0;color:var(--ink);font:600 .8rem/1.3 var(--disp);cursor:pointer}
+#menu button:hover{background:rgba(255,170,100,.1);color:var(--amber)}
+#menu small{display:block;margin-top:4px;font:400 .62rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+/* сетка */
+#main{position:relative;z-index:2;padding:0 var(--pad) 120px}
+#main section{padding-top:80px;scroll-margin-top:80px}
+#main h2{margin:0;font:800 clamp(28px,3.6vw,52px)/1.1 var(--disp);letter-spacing:-.02em}
+.cnt{display:block;margin:10px 0 34px;color:var(--mut)}
+.grid{columns:4 260px;column-gap:18px}
+.ph{position:relative;margin:0 0 18px;break-inside:avoid;cursor:zoom-in;overflow:hidden;background:#0d0b0a}
+.ph img{width:100%;display:block;filter:sepia(.08);transition:transform 1.2s cubic-bezier(.2,.7,.2,1),filter .6s}
+.ph:hover img{transform:scale(1.04);filter:sepia(0) brightness(1.05)}
+.ph::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,220,170,0);transition:box-shadow .4s;pointer-events:none}
+.ph:hover::after{box-shadow:inset 0 0 0 1px rgba(255,220,170,.35),inset 0 0 40px rgba(255,170,100,.15)}
+.ph a{position:absolute;right:10px;bottom:10px;z-index:2;width:36px;height:36px;display:grid;place-items:center;border-radius:9px;background:rgba(18,18,18,.75);color:var(--ink);opacity:0;transition:opacity .25s,color .25s}
+.ph:hover a{opacity:1}.ph a:hover{color:var(--amber)}
+@media(hover:none){.ph a{opacity:1}}
 body.nodl #dl,body.nodl #menu,body.nodl .ph a,body.nodl #ld{display:none!important}
 body.nodl img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
-.tbtn{width:38px;height:38px;padding:0!important;display:grid;place-items:center;border:1px solid var(--line)!important}
-.tbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
-.tbtn .s,[data-theme=dark] .tbtn .m{display:none}[data-theme=dark] .tbtn .s{display:block}
-[data-theme=dark]{color-scheme:dark;--ink:#e3ecf2;--mut:#7d8f9e;--line:#1f2a33}
-[data-theme=dark] body,[data-theme=dark] .bar{background:#0b1117}
-[data-theme=dark] #menu{background:#121b23;box-shadow:0 8px 30px rgba(0,0,0,.5)}
-[data-theme=dark] .ph a{background:#0b1117;color:#e3ecf2}
-[data-theme=dark] dialog{background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 50% 0%,#17242f 0%,#0b1117 65%)}
-[data-theme=dark] dialog:before{background-image:linear-gradient(rgba(166,182,194,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(166,182,194,.08) 1px,transparent 1px)}
-[data-theme=dark] dialog::backdrop{background:#0b1117}
-[data-theme=dark] dialog img{filter:drop-shadow(0 18px 40px rgba(0,0,0,.6))}
-[data-theme=dark] .lb{color:#e3ecf2;background:rgba(11,17,23,.7);border-color:rgba(166,182,194,.28)}
-[data-theme=dark] .lb:hover{background:#0b1117;color:#6fd0ee;border-color:#6fd0ee}
-[data-theme=dark] .lbcnt{color:#6fd0ee}
-[data-theme=dark] #dl{border-color:#e3ecf2}
-.theme-sw {
-  --w: 78px; --h: 34px; --o: 26px;
-  position: relative; flex: none; width: var(--w); height: var(--h); padding: 0;
-  border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); cursor: pointer; overflow: hidden;
-  background: linear-gradient(180deg, #1c1e21 0%, #0c0d0f 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 -8px 14px rgba(0, 0, 0, .65), 0 8px 22px -8px rgba(0, 0, 0, .55);
+.nf{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;color:var(--ink2)}
+/* просмотр */
+dialog{border:0;padding:0;max-width:100vw;max-height:100vh;width:100vw;height:100vh;overflow:hidden;background:#0e0d0c;color:var(--ink)}
+dialog::backdrop{background:#0e0d0c}
+dialog[open]{animation:lbIn .35s ease}
+@keyframes lbIn{from{opacity:0}}
+dialog::before{content:"";position:absolute;inset:-50%;z-index:3;pointer-events:none;opacity:.09;animation:grain .9s steps(4) infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+dialog::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.6) 100%)}
+dialog img{position:absolute;inset:60px 90px;width:calc(100% - 180px);height:calc(100% - 120px);object-fit:contain;filter:drop-shadow(0 20px 50px rgba(0,0,0,.7))}
+.lbcnt{position:absolute;left:28px;top:26px;z-index:4;color:#ff6a3d}
+.lbk{position:absolute;z-index:4}
+@media(max-width:700px){
+  .bar{padding:10px 16px}.left{gap:16px}.back span{display:none}
+  #main{padding:0 16px 80px}.grid{columns:2 140px;column-gap:10px}.ph{margin-bottom:10px}
+  dialog img{inset:70px 8px;width:calc(100% - 16px);height:calc(100% - 150px)}
+  .lbk[data-a=p],.lbk[data-a=n]{top:auto!important;bottom:16px}
 }
-.theme-sw::after { /* стеклянный блик */
-  content: ""; position: absolute; inset: 1px 6px auto; height: 45%; border-radius: 999px; pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0));
-}
-.theme-sw__orb {
-  position: absolute; top: 50%; left: 4px; width: var(--o); height: var(--o); border-radius: 999px;
-  transform: translate3d(0, -50%, 0);
-  box-shadow: 0 0 14px 5px rgba(255, 214, 40, .55), 0 0 34px 12px rgba(255, 170, 0, .28);
-  transition: transform .9s cubic-bezier(.65, 0, .25, 1), box-shadow .9s ease;
-  will-change: transform;
-}
-.theme-sw__orb::before, .theme-sw__orb::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit; filter: blur(.6px); transition: opacity .9s ease;
-}
-.theme-sw__orb::before { background: radial-gradient(circle at 42% 40%, #fffbe3 0%, #ffe94d 35%, #ffc400 62%, rgba(255, 170, 0, 0) 74%); }
-.theme-sw__orb::after { background: radial-gradient(circle at 42% 40%, #ffffff 0%, #d8f3ff 35%, #6fd0ee 62%, rgba(111, 208, 238, 0) 74%); opacity: 0; }
-.theme-sw.is-go .theme-sw__orb::before, .theme-sw.is-go .theme-sw__orb::after { animation: orbBlur .9s ease; }
-@keyframes orbBlur { 0% { filter: blur(.6px); } 45% { filter: blur(3.5px); transform: scaleX(1.35); } 100% { filter: blur(.6px); transform: none; } }
-.theme-sw__t {
-  position: absolute; top: 50%; transform: translateY(-50%); font: 600 9px/1 "JetBrains Mono",Consolas,monospace; letter-spacing: .14em;
-  color: rgba(255, 255, 255, .78); text-shadow: 0 0 6px rgba(255, 255, 255, .35); transition: opacity .7s ease, filter .7s ease;
-}
-.theme-sw__t--day { right: 11px; }
-.theme-sw__t--night { left: 9px; opacity: 0; filter: blur(3px); }
-.theme-sw:hover .theme-sw__orb { box-shadow: 0 0 18px 7px rgba(255, 214, 40, .7), 0 0 44px 16px rgba(255, 170, 0, .35); }
-[data-theme="dark"] .theme-sw__orb {
-  transform: translate3d(calc(var(--w) - var(--o) - 10px), -50%, 0);
-  box-shadow: 0 0 14px 5px rgba(111, 208, 238, .45), 0 0 34px 12px rgba(59, 184, 226, .2);
-}
-[data-theme="dark"] .theme-sw__orb::before { opacity: 0; }
-[data-theme="dark"] .theme-sw__orb::after { opacity: 1; }
-[data-theme="dark"] .theme-sw:hover .theme-sw__orb { box-shadow: 0 0 18px 7px rgba(111, 208, 238, .6), 0 0 44px 16px rgba(59, 184, 226, .3); }
-[data-theme="dark"] .theme-sw__t--day { opacity: 0; filter: blur(3px); }
-[data-theme="dark"] .theme-sw__t--night { opacity: 1; filter: none; }
-.acts .theme-sw{padding:0!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:999px!important}
-</style></head><body>
-<header class="hero" id="hero"><a class="home" href="./">← Plёnka Studio</a><div><p id="date"></p><h1 id="title"></h1><p id="by"></p></div><a class="down" href="#bar">↓</a></header>
-<nav class="bar" id="bar"><div class="left"><a class="back" href="./" title="На главную">←<span> На главную</span></a><div class="tabs" id="tabs"></div></div>
-<div class="acts"><button class="theme-sw" id="tb" title="Светлая / тёмная тема" aria-label="Переключить тему"><span class="theme-sw__t theme-sw__t--day">DAY</span><span class="theme-sw__t theme-sw__t--night">NIGHT</span><span class="theme-sw__orb"></span></button><button id="share">Поделиться</button>
-<button id="dl">Скачать файлы ⌄</button>
-<div id="menu" hidden><button data-m="all">Весь проект<small>Все файлы и папки</small></button><button data-m="cur">Текущую папку<small id="cn"></small></button></div></div></nav>
+</style>
+</head>
+<body>
+<div class="fx fx--vig"></div><div class="fx fx--grain"></div><canvas id="dust" aria-hidden="true"></canvas>
+<div class="page">
+<div class="bgm-wrap" aria-hidden="true"><div class="bgm" id="bgFar"></div><div class="bgm" id="bgNear"></div></div>
+
+<header class="ghero" id="hero"><div class="ghero__bg" id="heroBg"></div>
+  <p class="mono" id="date"></p><h1 class="glow" id="title" data-t=""></h1><p class="by mono" id="by"></p>
+  <a class="down mono" href="#bar">▼ перемотка</a></header>
+
+<nav class="bar" id="bar"><div class="left"><a class="back mono" href="./" title="На главную">←<span> На главную</span></a><div class="tabs mono" id="tabs"></div></div>
+  <div class="acts"><button class="key key--dark key--sm" id="share"><b></b><span>Поделиться</span></button>
+  <button class="key key--sm" id="dl"><b></b><span>Скачать файлы</span></button>
+  <div id="menu" hidden><button data-m="all">Весь проект<small>Все файлы и папки</small></button><button data-m="cur">Текущую папку<small id="cn"></small></button></div></div></nav>
+
 <main id="main"></main>
-<dialog id="lb"><img id="li" alt=""><span class="lbcnt" id="lc"></span><button class="lb" data-a="p" style="left:12px;top:calc(50% - 24px)">‹</button><button class="lb" data-a="n" style="right:12px;top:calc(50% - 24px)">›</button>
-<button class="lb" data-a="c" style="right:12px;top:12px">✕</button><a class="lb" id="ld" style="right:12px;bottom:12px;font-size:20px" title="Скачать">⬇</a></dialog>
+</div>
+
+<dialog id="lb"><img id="li" alt=""><span class="lbcnt mono" id="lc"></span>
+  <button class="key key--dark key--ico lbk" data-a="p" style="left:20px;top:calc(50% - 26px)" aria-label="Предыдущее">‹</button>
+  <button class="key key--dark key--ico lbk" data-a="n" style="right:20px;top:calc(50% - 26px)" aria-label="Следующее">›</button>
+  <button class="key key--dark key--ico lbk" data-a="c" style="right:20px;top:20px" aria-label="Закрыть">✕</button>
+  <a class="key key--ico lbk" id="ld" style="right:20px;bottom:20px" title="Скачать">⬇</a></dialog>
 <script src="js/config.js"></script>
+<script src="js/fx.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const q=new URLSearchParams(location.search).get('g'),C=window.MEMORIA_CONFIG||{};
+const q=new URLSearchParams(location.search).get('g'),C=window.PLENKA_CONFIG||{};
 let G,curF,li=0,list=[];
 const nice=(f,p)=>{const n=String(f.photos.indexOf(p)+1).padStart(2,'0'),t=(G.title+(G.folders.length>1?' - '+f.name:'')).replace(/[\\/:*?"<>|]+/g,' ').trim();return `${t}-${n}${p.slice(p.lastIndexOf('.'))}`};
 const P=(f,p,k)=>`photos/${G.slug}/${f.id}/${k}/${p}`;
 (/^[0-9a-f]{8,32}$/.test(q||'')?fetch(`data/g/${q}.json`,{cache:'no-store'}):Promise.reject()).then(r=>{if(!r.ok)throw 0;return r.json()}).then(g=>{G=g;init()}).catch(()=>{
- $('#main').innerHTML='<p style="padding:120px 0;text-align:center">Галерея не найдена<br><br><a href="./">← На главную</a></p>';$('#hero').style.display=$('#bar').style.display='none'});
+ $('#main').innerHTML='<div class="nf"><h2 class="glow" data-t="Галерея не найдена">Галерея не найдена</h2><p>Ссылка устарела или в ней ошибка.</p><a class="key" href="./"><b></b><span>На главную</span></a></div>';$('#hero').style.display=$('#bar').style.display='none'});
 function init(){
  const F=G.folders=G.folders.filter(f=>f.photos.length);curF=F[0];
- document.title=G.title+' — Plёnka Studio';$('#title').textContent=G.title;
+ document.title=G.title+' — Plёnka Studio';$('#title').textContent=G.title;$('#title').dataset.t=G.title;
  $('#date').textContent=G.date?G.date.split('-').reverse().join('.'):'';
  $('#by').textContent=C.photographer?'Фотограф '+C.photographer:'';
  const c=(G.cover||(F[0]&&P(F[0],F[0].photos[0],'thumb'))||'').replace('/thumb/','/full/');
- if(c){$('#hero').style.backgroundImage=`url("${c}")`;if(G.focus)$('#hero').style.backgroundPosition=G.focus}
+ if(c){$('#heroBg').style.backgroundImage=`url("${c}")`;if(G.focus)$('#heroBg').style.backgroundPosition=G.focus}
  // открытые (общие) галереи — только просмотр; скачивание есть лишь в скрытых, по выданной ссылке
  const dl=!!G.hidden;document.body.classList.toggle('nodl',!dl);
  $('#tabs').innerHTML=F.map(f=>`<a data-id="${f.id}">${esc(f.name)}</a>`).join('');
- $('#main').innerHTML=F.map(f=>`<section id="s-${f.id}"><h2>${esc(f.name)}</h2><div class="grid">`+
+ $('#main').innerHTML=F.map(f=>`<section id="s-${f.id}"><h2 class="glow" data-t="${esc(f.name)}">${esc(f.name)}</h2><span class="cnt mono">${String(f.photos.length).padStart(2,'0')} кадров</span><div class="grid">`+
   f.photos.map((p,i)=>`<figure class="ph" data-f="${f.id}" data-i="${i}"><img loading="lazy" src="${P(f,p,'thumb')}" alt=""><a href="${P(f,p,'full')}" download="${esc(nice(f,p))}" title="Скачать">⬇</a></figure>`).join('')+`</div></section>`).join('');
  setCur(curF);
 }
 function setCur(f){curF=f;$('#cn').textContent=f.name;document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.id===f.id))}
 $('#tabs').onclick=e=>{const id=e.target.dataset.id;if(id)$('#s-'+id).scrollIntoView()};
 addEventListener('scroll',()=>{if(!G)return;let f=G.folders[0];for(const x of G.folders)if($('#s-'+x.id).getBoundingClientRect().top<140)f=x;if(f!==curF)setCur(f)},{passive:true});
-$('#share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#share').textContent='Ссылка скопирована'}catch(e){prompt('Ссылка',location.href)}setTimeout(()=>$('#share').textContent='Поделиться',1800)};
-$('#tb').onclick=()=>{const tb=$('#tb');tb.classList.remove('is-go');void tb.offsetWidth;tb.classList.add('is-go');const n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}};
+$('#share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#share span').textContent='Ссылка скопирована'}catch(e){prompt('Ссылка',location.href)}setTimeout(()=>$('#share span').textContent='Поделиться',1800)};
 $('#dl').onclick=e=>{e.stopPropagation();$('#menu').hidden=!$('#menu').hidden};
 document.addEventListener('click',()=>$('#menu').hidden=true);
 $('#menu').onclick=async e=>{const m=e.target.closest('button')?.dataset.m;if(!m)return;
  const fs=m==='all'?G.folders:[curF],btn=$('#dl'),n=fs.reduce((s,f)=>s+f.photos.length,0);let k=0;
  try{const z=new JSZip();
   for(const f of fs){const dir=fs.length>1?z.folder(f.name):z;
-   for(const p of f.photos){dir.file(nice(f,p),await(await fetch(P(f,p,'full'))).blob());btn.textContent=`Архив ${++k}/${n}`}}
+   for(const p of f.photos){dir.file(nice(f,p),await(await fetch(P(f,p,'full'))).blob());btn.querySelector('span').textContent=`Архив ${++k}/${n}`}}
   const b=await z.generateAsync({type:'blob',compression:'STORE'}),a=document.createElement('a');
   a.href=URL.createObjectURL(b);a.download=(m==='all'?G.title:G.title+' - '+curF.name).replace(/[\\/:*?"<>|]+/g,' ')+'.zip';a.click();
  }catch(err){alert('Не удалось собрать архив')}
- btn.textContent='Скачать файлы ⌄'};
+ btn.querySelector('span').textContent='Скачать файлы'};
 const lb=$('#lb');
 document.addEventListener('contextmenu',e=>{if(document.body.classList.contains('nodl')&&e.target.tagName==='IMG')e.preventDefault()});
 document.addEventListener('dragstart',e=>{if(document.body.classList.contains('nodl')&&e.target.tagName==='IMG')e.preventDefault()});
-function show(i){li=(i+list.length)%list.length;const x=list[li],u=P(x.f,x.p,'full');$('#li').src=u;$('#ld').href=u;$('#ld').download=nice(x.f,x.p);$('#lc').textContent=`// ${String(li+1).padStart(2,'0')} / ${String(list.length).padStart(2,'0')}`}
+function show(i){li=(i+list.length)%list.length;const x=list[li],u=P(x.f,x.p,'full');$('#li').src=u;$('#ld').href=u;$('#ld').download=nice(x.f,x.p);$('#lc').textContent=`● PLAY · ${String(li+1).padStart(2,'0')} / ${String(list.length).padStart(2,'0')}`}
 $('#main').onclick=e=>{if(e.target.closest('a'))return;const fig=e.target.closest('.ph');if(!fig)return;
  const f=G.folders.find(x=>x.id===fig.dataset.f);list=f.photos.map(p=>({f,p}));show(+fig.dataset.i);lb.showModal()};
-lb.onclick=e=>{const a=e.target.dataset.a;if(a==='p')show(li-1);else if(a==='n')show(li+1);else if(a==='c'||e.target===lb)lb.close()};
+lb.onclick=e=>{const a=e.target.closest('[data-a]')?.dataset.a;if(a==='p')show(li-1);else if(a==='n')show(li+1);else if(a==='c'||e.target===lb)lb.close()};
 lb.onkeydown=e=>{if(e.key==='ArrowLeft')show(li-1);if(e.key==='ArrowRight')show(li+1)};
-</script></body></html>
+</script>
+</body>
+</html>

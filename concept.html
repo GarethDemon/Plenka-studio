@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Plёnka — концепт визуала</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Manrope:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#121212; --bg2:#0d0d0d; --ink:#efe6d8; --ink2:#b8ac9b; --mut:#7a7066; --line:rgba(239,230,216,.12);
+  --amber:#ffb46a; --s1:#e9a63c; --s2:#dd6a2a; --s3:#b7352b; --s4:#6f1f2c; --paper:#ece1c9; --pink:#1b1612;
+  --gr:255; --gg:170; --gb:110;
+  --disp:"Oswald",Impact,"Arial Narrow",sans-serif; --body:"Manrope",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:300 17px/1.6 var(--body);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+.ca{text-shadow:-.012em 0 0 rgba(255,60,60,.5),.012em 0 0 rgba(60,190,255,.42);animation:caj 7s steps(1) infinite}
+@keyframes caj{0%,96%,100%{text-shadow:-.012em 0 0 rgba(255,60,60,.5),.012em 0 0 rgba(60,190,255,.42)}97%{text-shadow:-.04em 0 0 rgba(255,60,60,.6),.035em 0 0 rgba(60,190,255,.5);transform:translateX(1px)}98%{text-shadow:.02em 0 0 rgba(255,60,60,.5),-.03em 0 0 rgba(60,190,255,.45)}}
+
+/* общий слой: зерно + виньетка + пыль */
+.fx{position:fixed;inset:0;pointer-events:none}
+.fx--vig{z-index:40;background:radial-gradient(ellipse at 50% 45%,transparent 50%,rgba(0,0,0,.55) 100%)}
+.fx--grain{z-index:41;inset:-50%;opacity:.07;animation:grain .9s steps(4) infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(0,0)}}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:39;pointer-events:none;mix-blend-mode:screen}
+
+/* шапка */
+.top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px clamp(18px,4vw,56px)}
+.logo{font:700 22px/1 var(--disp);letter-spacing:.14em}
+.logo small{display:block;font:400 9px/1.4 var(--mono);letter-spacing:.24em;color:var(--mut);margin-top:4px}
+.links{display:flex;gap:26px;color:var(--ink2)}
+.links a:hover{color:var(--amber)}
+.rec{color:#ff6a3d}.rec::first-letter{animation:blink 1.4s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* главный экран */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:120px clamp(18px,4vw,56px) 80px}
+.glow{position:absolute;z-index:0;pointer-events:none;width:120vmax;height:120vmax;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(var(--gr),var(--gg),var(--gb),.30),rgba(var(--gr),var(--gg),var(--gb),.08) 45%,transparent 72%);
+  transform:translate(-50%,-50%);transition:background 1.6s ease;animation:flick 5s infinite}
+@keyframes flick{0%,100%{opacity:1}7%{opacity:.86}8%{opacity:1}43%{opacity:.93}44%{opacity:1}71%{opacity:.8}72%{opacity:.97}}
+.hero__in{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,5vw,80px);align-items:center}
+.kicker{color:var(--amber);margin:0 0 18px}
+h1{margin:0;font:700 clamp(76px,12.5vw,210px)/.82 var(--disp);text-transform:uppercase;letter-spacing:-.01em;color:#f3e7d6}
+h1 span{display:block;font-weight:400;font-size:.34em;letter-spacing:.32em;color:var(--ink2);margin-top:.35em}
+.lead{max-width:40ch;color:var(--ink2);font-size:clamp(1.02rem,1.3vw,1.2rem);margin:28px 0 34px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{font:600 .74rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;padding:16px 22px;background:var(--ink);color:#121212;transition:.3s}
+.btn:hover{background:var(--amber);box-shadow:0 0 30px rgba(255,180,106,.35)}
+.btn--ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn--ghost:hover{background:none;color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+
+/* телевизор */
+.tv{margin:0;position:relative;padding:16px;border-radius:26px;background:linear-gradient(160deg,#1d1a17,#0b0a09);
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),inset 0 2px 0 rgba(255,255,255,.05),0 40px 80px -30px #000,0 0 140px -20px rgba(var(--gr),var(--gg),var(--gb),.45);transition:box-shadow 1.6s}
+.tv__screen{position:relative;aspect-ratio:4/3;border-radius:7%/9%;overflow:hidden;background:#050505;isolation:isolate}
+.tv__img{position:absolute;inset:0}
+.tv__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s;filter:sepia(.15) saturate(1.1) contrast(1.05)}
+.tv__img img.on{opacity:1}
+.tv__scan{position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+.tv__roll{position:absolute;left:0;right:0;height:18%;z-index:2;top:-20%;background:linear-gradient(transparent,rgba(255,255,255,.07),transparent);animation:roll 6s linear infinite}
+@keyframes roll{to{top:110%}}
+.tv__vig{position:absolute;inset:0;z-index:3;border-radius:inherit;box-shadow:inset 0 0 60px 18px rgba(0,0,0,.75),inset 0 0 6px 2px rgba(0,0,0,.9);
+  background:radial-gradient(ellipse at 35% 25%,rgba(255,255,255,.10),transparent 45%)}
+.tv__static{position:absolute;inset:0;z-index:4;width:100%;height:100%;opacity:0;image-rendering:pixelated;transition:opacity .15s}
+.tv__static.on{opacity:.55}
+.osd{position:absolute;z-index:5;font:600 clamp(11px,1.15vw,16px)/1 var(--mono);letter-spacing:.12em;color:#f4f4f4;text-shadow:2px 0 rgba(255,40,40,.55),-2px 0 rgba(40,200,255,.45),0 0 8px rgba(255,255,255,.35)}
+.osd--tl{top:7%;left:7%}.osd--tr{top:7%;right:7%}.osd--bl{bottom:7%;left:7%}.osd--br{bottom:7%;right:7%}
+.tv__leg{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 8px;color:var(--mut)}
+.tv__leg i{width:8px;height:8px;border-radius:50%;background:#ff6a3d;box-shadow:0 0 10px #ff6a3d}
+.scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;color:var(--mut)}
+
+/* секции */
+.sec{position:relative;z-index:2;padding:clamp(80px,11vw,150px) clamp(18px,4vw,56px)}
+.sec h2{margin:0 0 48px;font:700 clamp(46px,6.5vw,104px)/.9 var(--disp);text-transform:uppercase;letter-spacing:-.005em;color:#f3e7d6}
+.sec__head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.sec__head p{max-width:38ch;color:var(--ink2);margin:0 0 52px}
+
+/* тарифы-кассеты */
+.tapes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,40px);max-width:1280px}
+.tape{--r:-1.5deg;position:relative;background:var(--paper);color:var(--pink);padding:22px 24px 26px 58px;min-height:560px;display:flex;flex-direction:column;overflow:hidden;
+  transform:rotate(var(--r));transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;box-shadow:0 40px 60px -35px #000,0 0 0 1px rgba(0,0,0,.2)}
+.tape:nth-child(2){--r:1deg}.tape:nth-child(3){--r:-.6deg}
+.tape:hover{transform:rotate(0) translateY(-10px);box-shadow:0 60px 80px -40px #000,0 0 60px -20px rgba(255,180,106,.4)}
+.tape::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.5;
+  background:radial-gradient(ellipse at 80% 10%,rgba(120,80,30,.25),transparent 40%),radial-gradient(ellipse at 10% 95%,rgba(90,60,30,.3),transparent 45%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E")}
+.tape__spine{position:absolute;left:0;top:0;bottom:0;width:36px;border-right:1.5px solid rgba(27,22,18,.75);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 0}
+.tape__spine b{writing-mode:vertical-rl;transform:rotate(180deg);font:700 15px/1 var(--disp);letter-spacing:.2em}
+.tape__spine i{width:14px;height:14px;background:repeating-linear-gradient(90deg,var(--s3) 0 2px,transparent 2px 4px)}
+.tape__top{display:flex;justify-content:space-between;align-items:flex-start}
+.tape__brand{font:700 30px/1 var(--disp);letter-spacing:.06em}
+.tape__dots{width:44px;height:44px;background:radial-gradient(circle,var(--s3) 1.6px,transparent 2px) 0 0/8px 8px}
+.tape__made{margin-top:46px;font:italic 600 20px/1 var(--body)}
+.tape__num{font:700 92px/.9 var(--disp);letter-spacing:-.03em;font-style:italic}
+.tape__num small{font-size:.24em;letter-spacing:.06em;margin-left:6px}
+.tape__band{position:relative;margin:26px -24px 22px -22px;height:96px;
+  background:linear-gradient(to bottom,var(--s1) 0 25%,var(--s2) 25% 50%,var(--s3) 50% 75%,var(--s4) 75%)}
+.tape__band::after{content:"";position:absolute;right:-1px;top:14%;width:34%;height:72%;background:#121212;border-radius:999px 0 0 999px}
+.tape ul{list-style:none;margin:0;padding:0;font:400 .9rem/1.55 var(--body)}
+.tape li::before{content:"— "}
+.tape__foot{margin-top:auto;padding-top:18px;border-top:1.5px solid rgba(27,22,18,.75);display:flex;justify-content:space-between;align-items:center}
+.tape__price{font:700 30px/1 var(--disp)}
+.tape__go{font:600 .68rem/1 var(--mono);letter-spacing:.14em;padding:11px 14px;background:var(--pink);color:var(--paper)}
+.tape:hover .tape__go{background:var(--s3)}
+
+/* кадры: линза + свечение */
+.shots{display:grid;grid-template-columns:1.2fr .9fr 1fr;gap:clamp(14px,2vw,28px);align-items:end;max-width:1280px}
+.shot{margin:0}
+.shot__f{position:relative;aspect-ratio:4/5;overflow:hidden;background:#0a0a0a}
+.shot:nth-child(2) .shot__f{aspect-ratio:3/4}
+.shot__f img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.12) saturate(1.05);transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.shot__f::after{content:"";position:absolute;inset:0;background:var(--u) center/cover;filter:blur(18px) brightness(1.3);mix-blend-mode:screen;opacity:.28;transition:opacity .8s;pointer-events:none}
+.shot:hover .shot__f img{transform:scale(1.05)}
+.shot:hover .shot__f::after{opacity:.5}
+.shot figcaption{display:flex;justify-content:space-between;margin-top:12px;color:var(--mut)}
+.shot figcaption b{color:var(--ink);font-weight:600}
+
+/* система */
+.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;max-width:1280px}
+.card{border:1px solid var(--line);padding:24px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.card h3{margin:0 0 16px;color:var(--amber)}
+.sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sw div{aspect-ratio:1;border:1px solid var(--line);display:flex;align-items:flex-end;padding:6px;font:400 9px/1.2 var(--mono);color:var(--ink2)}
+.t1{font:700 54px/1 var(--disp);text-transform:uppercase}
+.t2{font:300 17px/1.6 var(--body);color:var(--ink2);margin:10px 0}
+.t3{color:var(--amber)}
+.note{max-width:1280px;margin-top:60px;color:var(--mut)}
+
+@media (max-width:960px){
+  .hero__in{grid-template-columns:1fr}.tv{order:-1}.links{display:none}
+  .tapes,.shots{grid-template-columns:1fr}.tape{min-height:0;--r:0deg!important}
+  .hero{padding-top:100px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="fx fx--vig"></div><div class="fx fx--grain"></div><canvas id="dust" aria-hidden="true"></canvas>
+
+<header class="hero" id="hero">
+  <div class="glow" id="glow"></div>
+  <nav class="top">
+    <span class="logo">PLЁNKA<small>grunge cinema · spb</small></span>
+    <div class="links mono"><a href="#">Обо мне</a><a href="#">Архив</a><a href="#tapes">Тарифы</a><a href="#">Связь</a></div>
+    <span class="mono rec">● REC</span>
+  </nav>
+  <div class="hero__in">
+    <div>
+      <p class="mono kicker">Кассета 01 · Санкт-Петербург · с 2018</p>
+      <h1 class="ca">Plёnka<span>studio</span></h1>
+      <p class="lead">Гранж-кино: кадры, похожие на остановленную сцену из фильма — немного холодно, немного тепло и всегда что-то недосказано.</p>
+      <div class="btns"><a class="btn" href="#shots">▶ Смотреть архив</a><a class="btn btn--ghost" href="#tapes">Выбрать кассету</a></div>
+    </div>
+    <figure class="tv">
+      <div class="tv__screen">
+        <div class="tv__img" id="tvImg"></div>
+        <div class="tv__scan"></div><div class="tv__roll"></div>
+        <canvas class="tv__static" id="static" width="160" height="120"></canvas>
+        <div class="tv__vig"></div>
+        <div class="osd osd--tl">PLAY ▶</div><div class="osd osd--tr" id="ch">CH 01</div>
+        <div class="osd osd--bl">SP</div><div class="osd osd--br" id="tc">0:00:00</div>
+      </div>
+      <figcaption class="tv__leg mono"><span>Plёnka · trinitron</span><i></i></figcaption>
+    </figure>
+  </div>
+  <span class="scroll mono">▼ перемотка</span>
+</header>
+
+<section class="sec" id="tapes">
+  <div class="sec__head"><h2 class="ca">Выберите<br>кассету</h2><p>Тарифы как обложки VHS: тёплая бумага, полосы, потёртости. Наведи — кассета выпрямится и подсветится.</p></div>
+  <div class="tapes">
+    <article class="tape"><div class="tape__spine"><i></i><b>PLЁNKA · 01</b><i></i></div>
+      <div class="tape__top"><span class="tape__brand">PLЁNKA.</span><span class="tape__dots"></span></div>
+      <div class="tape__made">Фрагмент</div><div class="tape__num">60<small>мин</small></div>
+      <div class="tape__band"></div>
+      <ul><li>1 зал на выбор</li><li>15 кадров в авторской обработке</li></ul>
+      <div class="tape__foot"><span class="tape__price">4 900 ₽</span><span class="tape__go">▶ ВЫБРАТЬ</span></div>
+    </article>
+    <article class="tape"><div class="tape__spine"><i></i><b>PLЁNKA · 02</b><i></i></div>
+      <div class="tape__top"><span class="tape__brand">PLЁNKA.</span><span class="tape__dots"></span></div>
+      <div class="tape__made">Секвенция</div><div class="tape__num">120<small>мин</small></div>
+      <div class="tape__band"></div>
+      <ul><li>2 зала на выбор</li><li>35 кадров в авторской обработке</li><li>Помощь в поиске визажиста</li></ul>
+      <div class="tape__foot"><span class="tape__price">9 900 ₽</span><span class="tape__go">▶ ВЫБРАТЬ</span></div>
+    </article>
+    <article class="tape"><div class="tape__spine"><i></i><b>PLЁNKA · 03</b><i></i></div>
+      <div class="tape__top"><span class="tape__brand">PLЁNKA.</span><span class="tape__dots"></span></div>
+      <div class="tape__made">Полная синхронизация</div><div class="tape__num">180<small>мин</small></div>
+      <div class="tape__band"></div>
+      <ul><li>3 зала — любой можно сменить на час съёмки</li><li>60 кадров в авторской обработке</li><li>Исходники — по желанию</li></ul>
+      <div class="tape__foot"><span class="tape__price">19 900 ₽</span><span class="tape__go">▶ ВЫБРАТЬ</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="sec" id="shots">
+  <div class="sec__head"><h2 class="ca">Кадры<br>из архива</h2><p>Лёгкое искажение линзы, хроматическая аберрация по краям и мягкое свечение — как будто смотришь через старый объектив.</p></div>
+  <div class="shots" id="shotsGrid"></div>
+</section>
+
+<section class="sec">
+  <div class="sec__head"><h2 class="ca">Система</h2><p>Палитра и шрифты концепта — основа, на которой соберу весь сайт.</p></div>
+  <div class="sys">
+    <div class="card"><h3 class="mono">Цвет</h3><div class="sw">
+      <div style="background:#121212">121212</div><div style="background:#0d0d0d">0d0d0d</div><div style="background:#efe6d8;color:#121212">efe6d8</div><div style="background:#ffb46a;color:#121212">ffb46a</div>
+      <div style="background:#e9a63c;color:#121212">e9a63c</div><div style="background:#dd6a2a">dd6a2a</div><div style="background:#b7352b">b7352b</div><div style="background:#6f1f2c">6f1f2c</div></div></div>
+    <div class="card"><h3 class="mono">Шрифты</h3><div class="t1 ca">Oswald</div><div class="t2">Manrope — основной текст, мягкий и читаемый.</div><div class="mono t3">IBM Plex Mono — экранные надписи</div></div>
+    <div class="card"><h3 class="mono">Эффекты</h3><div class="t2">Тёплый свет экрана меняет цвет под кадр · пылинки в луче · зерно · виньетка · сканлайны · аберрация · бочкообразная линза · помехи при смене канала.</div></div>
+  </div>
+  <p class="note mono">// концепт · не финальный сайт</p>
+</section>
+
+<script>
+(async () => {
+  const $ = (s) => document.querySelector(s);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let files = ['6e7e54c0fbdb.jpg','6e088201ae7e.jpg','c785ec1403b3.jpg','836a11ecabbd.jpg','a2e212777408.jpg'];
+  try { const d = await (await fetch('data/site.json', { cache: 'no-store' })).json(); if (d.slider && d.slider.length) files = d.slider.map((x) => x.file); } catch (e) {}
+  const src = (f) => 'photos/site/web/' + f;
+
+  /* ---------- линза: бочкообразное искажение + хроматическая аберрация (SVG-фильтр) ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('width', 0); svg.setAttribute('height', 0); svg.style.position = 'absolute';
+  document.body.appendChild(svg);
+  const map = (() => { const n = 256, c = document.createElement('canvas'); c.width = c.height = n; const x = c.getContext('2d'), d = x.createImageData(n, n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const u = i / (n - 1) * 2 - 1, v = j / (n - 1) * 2 - 1, r2 = Math.min(2, u * u + v * v), k = (j * n + i) * 4;
+      d.data[k] = 128 - u * r2 * 32; d.data[k + 1] = 128 - v * r2 * 32; d.data[k + 2] = 128; d.data[k + 3] = 255; }
+    x.putImageData(d, 0, 0); return c.toDataURL(); })();
+  let fid = 0;
+  function lens(el, strength = .1, ca = .25) {
+    const id = 'lens' + (++fid), f = document.createElementNS(NS, 'filter');
+    f.id = id; f.setAttribute('filterUnits', 'userSpaceOnUse'); f.setAttribute('color-interpolation-filters', 'sRGB');
+    f.innerHTML = '<feImage result="m" preserveAspectRatio="none"/>' +
+      ['r', 'g', 'b'].map((c, i) => `<feDisplacementMap in="SourceGraphic" in2="m" xChannelSelector="R" yChannelSelector="G" result="d${c}"/>` +
+        `<feColorMatrix in="d${c}" type="matrix" values="${i === 0 ? '1 0 0 0 0 ' : '0 0 0 0 0 '}${i === 1 ? '0 1 0 0 0 ' : '0 0 0 0 0 '}${i === 2 ? '0 0 1 0 0 ' : '0 0 0 0 0 '}0 0 0 1 0" result="${c}"/>`).join('') +
+      '<feBlend in="r" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b" mode="screen"/>';
+    svg.appendChild(f);
+    const img = f.querySelector('feImage'); img.setAttribute('href', map);
+    const fit = () => { const w = el.offsetWidth, h = el.offsetHeight, s = Math.min(w, h) * strength * 4;
+      [f, img].forEach((n) => { n.setAttribute('x', 0); n.setAttribute('y', 0); n.setAttribute('width', w); n.setAttribute('height', h); });
+      f.querySelectorAll('feDisplacementMap').forEach((m, i) => m.setAttribute('scale', s * [1 + ca, 1, 1 - ca][i])); };
+    fit(); new ResizeObserver(fit).observe(el); el.style.filter = `url(#${id})`;
+  }
+
+  /* ---------- телевизор ---------- */
+  const tv = $('#tvImg');
+  tv.innerHTML = files.map((f, i) => `<img src="${src(f)}" alt="" ${i ? 'loading="lazy"' : ''}>`).join('');
+  const imgs = [...tv.children];
+  lens(tv, .1, .3);
+  const root = document.documentElement.style; let COL = '255,170,110';
+  const tint = (img) => { try { const c = document.createElement('canvas'); c.width = c.height = 12; const x = c.getContext('2d'); x.drawImage(img, 0, 0, 12, 12);
+    const p = x.getImageData(0, 0, 12, 12).data; let r = 0, g = 0, b = 0; for (let i = 0; i < p.length; i += 4) { r += p[i]; g += p[i + 1]; b += p[i + 2]; }
+    const n = p.length / 4; r /= n; g /= n; b /= n; const m = Math.max(r, g, b) || 1;
+    // тёплый свет экрана: цвет кадра, подтянутый к янтарю
+    const R1 = Math.round(255 * .55 + r / m * 255 * .45), G1 = Math.round(170 * .55 + g / m * 230 * .45), B1 = Math.round(110 * .6 + b / m * 200 * .4);
+    root.setProperty('--gr', R1); root.setProperty('--gg', G1); root.setProperty('--gb', B1); COL = `${R1},${G1},${B1}`; } catch (e) {} };
+  const st = $('#static'), sx = st.getContext('2d');
+  const noise = () => { const d = sx.createImageData(160, 120); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } sx.putImageData(d, 0, 0); };
+  let cur = 0;
+  const show = (i) => { cur = (i + imgs.length) % imgs.length; imgs.forEach((im, k) => im.classList.toggle('on', k === cur));
+    $('#ch').textContent = 'CH ' + String(cur + 1).padStart(2, '0'); const im = imgs[cur]; im.complete ? tint(im) : im.addEventListener('load', () => tint(im), { once: true }); };
+  const zap = () => { if (reduce) return show(cur + 1); st.classList.add('on'); let n = 0; const t = setInterval(() => { noise(); if (++n === 6) { clearInterval(t); show(cur + 1); st.classList.remove('on'); } }, 45); };
+  show(0); setInterval(zap, 5200);
+  const t0 = Date.now(); setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000) + 754; $('#tc').textContent = `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; }, 1000);
+
+  // свет экрана ложится на комнату
+  const glow = $('#glow'), tvEl = document.querySelector('.tv'), hero = $('#hero');
+  const place = () => { const a = tvEl.getBoundingClientRect(), h = hero.getBoundingClientRect(); glow.style.left = (a.left - h.left + a.width / 2) + 'px'; glow.style.top = (a.top - h.top + a.height / 2) + 'px'; };
+  place(); addEventListener('resize', place);
+
+  /* ---------- кадры ---------- */
+  const pick = [files[1], files[3], files[4]].filter(Boolean);
+  $('#shotsGrid').innerHTML = pick.map((f, i) => `<figure class="shot"><div class="shot__f" style="--u:url('${src(f)}')"><img src="${src(f)}" alt="" loading="lazy"></div>
+    <figcaption class="mono"><b>Vampire Autumn</b><span>REC 0${i + 1}:${14 + i * 7} · SP</span></figcaption></figure>`).join('');
+  document.querySelectorAll('.shot__f').forEach((el) => lens(el, .06, .45));
+
+  /* ---------- пылинки в луче ---------- */
+  const cv = $('#dust'), cx = cv.getContext('2d'); let W, H, D = Math.min(devicePixelRatio || 1, 2);
+  const rs = () => { W = innerWidth; H = innerHeight; cv.width = W * D; cv.height = H * D; cx.setTransform(D, 0, 0, D, 0, 0); };
+  rs(); addEventListener('resize', rs);
+  const R = (a, b) => a + Math.random() * (b - a);
+  const P = Array.from({ length: 110 }, (_, i) => ({ x: R(0, innerWidth), y: R(0, innerHeight), z: R(.2, 1), vx: R(-.08, .08), vy: R(-.12, .02), ph: R(0, 6.28), big: i < 9 }));
+  const tick = (t) => {
+    cx.clearRect(0, 0, W, H);
+    const a = tvEl.getBoundingClientRect(), gx = a.left + a.width / 2, gy = a.top + a.height / 2, reach = Math.max(W, H) * .75;
+    const col = COL;
+    for (const p of P) {
+      p.vx += R(-.004, .004); p.vy += R(-.004, .004); p.vx *= .995; p.vy *= .995;
+      p.x += p.vx * p.z * 2; p.y += (p.vy - .03) * p.z * 2;
+      if (p.y < -20) { p.y = H + 20; p.x = R(0, W); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+      const d = Math.hypot(p.x - gx, p.y - gy), l = Math.max(0, 1 - d / reach) ** 2, tw = .6 + .4 * Math.sin(t / 900 + p.ph);
+      if (p.big) { const r = 6 + p.z * 12, g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r); g.addColorStop(0, `rgba(${col},${.07 * l * tw})`); g.addColorStop(1, `rgba(${col},0)`); cx.fillStyle = g; cx.beginPath(); cx.arc(p.x, p.y, r, 0, 6.28); cx.fill(); }
+      else { cx.fillStyle = `rgba(${col},${(.05 + .55 * l) * tw * p.z})`; cx.beginPath(); cx.arc(p.x, p.y, .4 + p.z * 1.2, 0, 6.28); cx.fill(); }
+    }
+    if (!reduce) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

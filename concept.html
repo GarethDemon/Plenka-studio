@@ -6,111 +6,116 @@
 <meta name="robots" content="noindex">
 <title>Plёnka — концепт визуала</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Manrope:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#121212; --bg2:#0d0d0d; --ink:#efe6d8; --ink2:#b8ac9b; --mut:#7a7066; --line:rgba(239,230,216,.12);
-  --amber:#ffb46a; --s1:#e9a63c; --s2:#dd6a2a; --s3:#b7352b; --s4:#6f1f2c; --paper:#ece1c9; --pink:#1b1612;
-  --gr:255; --gg:170; --gb:110;
-  --disp:"Oswald",Impact,"Arial Narrow",sans-serif; --body:"Manrope",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --bg:#121212; --ink:#f1e7d6; --ink2:#bdb0a0; --mut:#7d7368; --line:rgba(241,231,214,.12);
+  --amber:#ffb46a; --s1:#e9a63c; --s2:#dd6a2a; --s3:#c23a2c; --s4:#7a2232; --teal:#3f8f8a; --paper:#ece1c9;
+  --disp:"Unbounded","Arial Black",sans-serif; --body:"Manrope",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box}
 html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font:300 17px/1.6 var(--body);overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 .mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
-.ca{text-shadow:-.012em 0 0 rgba(255,60,60,.5),.012em 0 0 rgba(60,190,255,.42);animation:caj 7s steps(1) infinite}
-@keyframes caj{0%,96%,100%{text-shadow:-.012em 0 0 rgba(255,60,60,.5),.012em 0 0 rgba(60,190,255,.42)}97%{text-shadow:-.04em 0 0 rgba(255,60,60,.6),.035em 0 0 rgba(60,190,255,.5);transform:translateX(1px)}98%{text-shadow:.02em 0 0 rgba(255,60,60,.5),-.03em 0 0 rgba(60,190,255,.45)}}
 
-/* общий слой: зерно + виньетка + пыль */
+/* ---------- фон: живой зернистый градиент ---------- */
+.bgm{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#121212}
+.bgm i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.42;will-change:transform}
+.bgm i:nth-child(1){width:60vmax;height:60vmax;left:-18vmax;top:-22vmax;background:radial-gradient(circle,#b8682c,transparent 65%);animation:d1 26s ease-in-out infinite alternate}
+.bgm i:nth-child(2){width:55vmax;height:55vmax;right:-20vmax;top:10vh;background:radial-gradient(circle,#6e1f2c,transparent 65%);animation:d2 31s ease-in-out infinite alternate}
+.bgm i:nth-child(3){width:50vmax;height:50vmax;left:15vw;bottom:-30vmax;background:radial-gradient(circle,#1f4f4d,transparent 65%);opacity:.36;animation:d3 35s ease-in-out infinite alternate}
+.bgm i:nth-child(4){width:30vmax;height:30vmax;left:45vw;top:20vh;background:radial-gradient(circle,#e09040,transparent 65%);opacity:.16;animation:d1 22s ease-in-out infinite alternate-reverse}
+@keyframes d1{to{transform:translate(12vw,10vh) scale(1.15)}}
+@keyframes d2{to{transform:translate(-14vw,18vh) scale(.9)}}
+@keyframes d3{to{transform:translate(10vw,-12vh) scale(1.1)}}
 .fx{position:fixed;inset:0;pointer-events:none}
-.fx--vig{z-index:40;background:radial-gradient(ellipse at 50% 45%,transparent 50%,rgba(0,0,0,.55) 100%)}
-.fx--grain{z-index:41;inset:-50%;opacity:.07;animation:grain .9s steps(4) infinite;
+.fx--vig{z-index:40;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(0,0,0,.6) 100%)}
+.fx--grain{z-index:41;inset:-50%;opacity:.11;animation:grain .9s steps(4) infinite;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(0,0)}}
 #dust{position:fixed;inset:0;width:100%;height:100%;z-index:39;pointer-events:none;mix-blend-mode:screen}
+main{position:relative;z-index:2}
 
-/* шапка */
-.top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px clamp(18px,4vw,56px)}
-.logo{font:700 22px/1 var(--disp);letter-spacing:.14em}
-.logo small{display:block;font:400 9px/1.4 var(--mono);letter-spacing:.24em;color:var(--mut);margin-top:4px}
-.links{display:flex;gap:26px;color:var(--ink2)}
+/* ---------- светящийся ретро-шрифт со сканлайнами и лёгким глитчем ---------- */
+.glow{position:relative;display:inline-block;color:#f6ecdc;
+  text-shadow:0 0 1px rgba(255,244,228,.9),0 0 14px rgba(255,214,170,.42),0 0 42px rgba(255,170,100,.22),-2px 0 0 rgba(255,60,90,.38),2px 0 0 rgba(60,200,255,.32);
+  filter:blur(.25px)}
+.glow{-webkit-mask-image:repeating-linear-gradient(to bottom,#000 0 3px,rgba(0,0,0,.5) 3px 4px);mask-image:repeating-linear-gradient(to bottom,#000 0 3px,rgba(0,0,0,.5) 3px 4px);padding:0 .12em;margin:0 -.12em}
+.glow::before{content:attr(data-t);position:absolute;left:0;top:0;width:100%;color:inherit;opacity:0;pointer-events:none;
+  clip-path:inset(40% 0 45% 0);animation:gl 6.5s steps(1) infinite}
+@keyframes gl{0%,93%,100%{opacity:0;transform:none}
+  94%{opacity:.85;transform:translateX(6px);clip-path:inset(38% 0 48% 0)}
+  95%{opacity:.85;transform:translateX(-5px);clip-path:inset(62% 0 22% 0)}
+  96%{opacity:0}}
+
+/* ---------- шапка ---------- */
+.top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:28px clamp(18px,4vw,56px)}
+.logo{font:800 20px/1 var(--disp);letter-spacing:.06em}
+.links{display:flex;gap:28px;color:var(--ink2)}
 .links a:hover{color:var(--amber)}
-.rec{color:#ff6a3d}.rec::first-letter{animation:blink 1.4s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
 
-/* главный экран */
-.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:120px clamp(18px,4vw,56px) 80px}
-.glow{position:absolute;z-index:0;pointer-events:none;width:120vmax;height:120vmax;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(var(--gr),var(--gg),var(--gb),.30),rgba(var(--gr),var(--gg),var(--gb),.08) 45%,transparent 72%);
-  transform:translate(-50%,-50%);transition:background 1.6s ease;animation:flick 5s infinite}
-@keyframes flick{0%,100%{opacity:1}7%{opacity:.86}8%{opacity:1}43%{opacity:.93}44%{opacity:1}71%{opacity:.8}72%{opacity:.97}}
-.hero__in{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,5vw,80px);align-items:center}
-.kicker{color:var(--amber);margin:0 0 18px}
-h1{margin:0;font:700 clamp(76px,12.5vw,210px)/.82 var(--disp);text-transform:uppercase;letter-spacing:-.01em;color:#f3e7d6}
-h1 span{display:block;font-weight:400;font-size:.34em;letter-spacing:.32em;color:var(--ink2);margin-top:.35em}
-.lead{max-width:40ch;color:var(--ink2);font-size:clamp(1.02rem,1.3vw,1.2rem);margin:28px 0 34px}
-.btns{display:flex;gap:12px;flex-wrap:wrap}
-.btn{font:600 .74rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;padding:16px 22px;background:var(--ink);color:#121212;transition:.3s}
-.btn:hover{background:var(--amber);box-shadow:0 0 30px rgba(255,180,106,.35)}
-.btn--ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
-.btn--ghost:hover{background:none;color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+/* ---------- первый экран ---------- */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px clamp(18px,4vw,56px) 90px}
+.kicker{color:var(--amber);margin:0 0 34px}
+h1{margin:0;font:800 clamp(52px,9.4vw,152px)/1.05 var(--disp);letter-spacing:-.02em;padding-top:.08em}
+.sub{margin:6px 0 0;font:400 clamp(14px,1.6vw,22px)/1 var(--disp);letter-spacing:.6em;color:var(--ink2);padding-left:.6em}
+.stripes{display:flex;gap:10px;justify-content:center;margin:34px 0 30px}
+.stripes i{width:clamp(26px,3.4vw,52px);height:clamp(10px,1vw,14px);transform:skewX(-28deg);filter:blur(.4px);box-shadow:0 0 14px currentColor}
+.stripes i:nth-child(1){background:var(--s1);color:var(--s1)}.stripes i:nth-child(2){background:var(--s2);color:var(--s2)}
+.stripes i:nth-child(3){background:var(--s3);color:var(--s3)}.stripes i:nth-child(4){background:var(--s4);color:var(--s4)}
+.stripes i:nth-child(5){background:var(--teal);color:var(--teal)}
+.lead{max-width:44ch;color:var(--ink2);font-size:clamp(1rem,1.25vw,1.15rem);margin:0 auto 40px}
+.scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);color:var(--mut)}
 
-/* телевизор */
-.tv{margin:0;position:relative;padding:16px;border-radius:26px;background:linear-gradient(160deg,#1d1a17,#0b0a09);
-  box-shadow:0 0 0 1px rgba(255,255,255,.05),inset 0 2px 0 rgba(255,255,255,.05),0 40px 80px -30px #000,0 0 140px -20px rgba(var(--gr),var(--gg),var(--gb),.45);transition:box-shadow 1.6s}
-.tv__screen{position:relative;aspect-ratio:4/3;border-radius:7%/9%;overflow:hidden;background:#050505;isolation:isolate}
-.tv__img{position:absolute;inset:0}
-.tv__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s;filter:sepia(.15) saturate(1.1) contrast(1.05)}
-.tv__img img.on{opacity:1}
-.tv__scan{position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
-.tv__roll{position:absolute;left:0;right:0;height:18%;z-index:2;top:-20%;background:linear-gradient(transparent,rgba(255,255,255,.07),transparent);animation:roll 6s linear infinite}
-@keyframes roll{to{top:110%}}
-.tv__vig{position:absolute;inset:0;z-index:3;border-radius:inherit;box-shadow:inset 0 0 60px 18px rgba(0,0,0,.75),inset 0 0 6px 2px rgba(0,0,0,.9);
-  background:radial-gradient(ellipse at 35% 25%,rgba(255,255,255,.10),transparent 45%)}
-.tv__static{position:absolute;inset:0;z-index:4;width:100%;height:100%;opacity:0;image-rendering:pixelated;transition:opacity .15s}
-.tv__static.on{opacity:.55}
-.osd{position:absolute;z-index:5;font:600 clamp(11px,1.15vw,16px)/1 var(--mono);letter-spacing:.12em;color:#f4f4f4;text-shadow:2px 0 rgba(255,40,40,.55),-2px 0 rgba(40,200,255,.45),0 0 8px rgba(255,255,255,.35)}
-.osd--tl{top:7%;left:7%}.osd--tr{top:7%;right:7%}.osd--bl{bottom:7%;left:7%}.osd--br{bottom:7%;right:7%}
-.tv__leg{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 8px;color:var(--mut)}
-.tv__leg i{width:8px;height:8px;border-radius:50%;background:#ff6a3d;box-shadow:0 0 10px #ff6a3d}
-.scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;color:var(--mut)}
+/* ---------- кнопки: клавиши старого видеомагнитофона ---------- */
+.btns{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+.key{--d:6px;display:inline-flex;align-items:center;gap:12px;padding:17px 26px 16px;border-radius:12px;font:600 .74rem/1 var(--disp);letter-spacing:.08em;text-transform:uppercase;
+  color:#1b1511;background:linear-gradient(180deg,#f8efe0 0%,#e3d4bb 55%,#cdbb9d 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(0,0,0,.18),0 var(--d) 0 #8d4a24,0 calc(var(--d) + 1px) 0 #4a2414,0 18px 30px -10px rgba(0,0,0,.7);
+  transform:translateY(0);transition:transform .12s,box-shadow .12s,filter .25s}
+.key b{width:9px;height:9px;border-radius:50%;background:#ff5a2e;box-shadow:0 0 8px #ff5a2e,0 0 2px #fff inset}
+.key:hover{filter:brightness(1.05)}
+.key:active{transform:translateY(var(--d));box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -2px 0 rgba(0,0,0,.18),0 0 0 #8d4a24,0 1px 0 #4a2414,0 8px 14px -8px rgba(0,0,0,.7)}
+.key--dark{color:var(--ink);background:linear-gradient(180deg,#34302b 0%,#211d1a 60%,#191613 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -2px 0 rgba(0,0,0,.4),0 var(--d) 0 #0a0807,0 calc(var(--d) + 1px) 0 #000,0 18px 30px -10px rgba(0,0,0,.8)}
+.key--dark b{background:var(--teal);box-shadow:0 0 8px var(--teal)}
+.key--dark:active{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -2px 0 rgba(0,0,0,.4),0 0 0 #0a0807,0 1px 0 #000}
+.key--sm{--d:4px;padding:12px 16px 11px;font-size:.62rem;border-radius:9px}
 
-/* секции */
-.sec{position:relative;z-index:2;padding:clamp(80px,11vw,150px) clamp(18px,4vw,56px)}
-.sec h2{margin:0 0 48px;font:700 clamp(46px,6.5vw,104px)/.9 var(--disp);text-transform:uppercase;letter-spacing:-.005em;color:#f3e7d6}
-.sec__head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
-.sec__head p{max-width:38ch;color:var(--ink2);margin:0 0 52px}
+/* ---------- секции ---------- */
+.sec{position:relative;padding:clamp(80px,11vw,150px) clamp(18px,4vw,56px)}
+.sec__head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:56px}
+.sec h2{margin:0;font:800 clamp(34px,5vw,78px)/1.1 var(--disp);letter-spacing:-.02em}
+.sec__head p{max-width:38ch;color:var(--ink2);margin:0}
 
-/* тарифы-кассеты */
-.tapes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,40px);max-width:1280px}
-.tape{--r:-1.5deg;position:relative;background:var(--paper);color:var(--pink);padding:22px 24px 26px 58px;min-height:560px;display:flex;flex-direction:column;overflow:hidden;
-  transform:rotate(var(--r));transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;box-shadow:0 40px 60px -35px #000,0 0 0 1px rgba(0,0,0,.2)}
-.tape:nth-child(2){--r:1deg}.tape:nth-child(3){--r:-.6deg}
-.tape:hover{transform:rotate(0) translateY(-10px);box-shadow:0 60px 80px -40px #000,0 0 60px -20px rgba(255,180,106,.4)}
-.tape::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.5;
-  background:radial-gradient(ellipse at 80% 10%,rgba(120,80,30,.25),transparent 40%),radial-gradient(ellipse at 10% 95%,rgba(90,60,30,.3),transparent 45%),
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E")}
-.tape__spine{position:absolute;left:0;top:0;bottom:0;width:36px;border-right:1.5px solid rgba(27,22,18,.75);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 0}
-.tape__spine b{writing-mode:vertical-rl;transform:rotate(180deg);font:700 15px/1 var(--disp);letter-spacing:.2em}
-.tape__spine i{width:14px;height:14px;background:repeating-linear-gradient(90deg,var(--s3) 0 2px,transparent 2px 4px)}
-.tape__top{display:flex;justify-content:space-between;align-items:flex-start}
-.tape__brand{font:700 30px/1 var(--disp);letter-spacing:.06em}
-.tape__dots{width:44px;height:44px;background:radial-gradient(circle,var(--s3) 1.6px,transparent 2px) 0 0/8px 8px}
-.tape__made{margin-top:46px;font:italic 600 20px/1 var(--body)}
-.tape__num{font:700 92px/.9 var(--disp);letter-spacing:-.03em;font-style:italic}
-.tape__num small{font-size:.24em;letter-spacing:.06em;margin-left:6px}
-.tape__band{position:relative;margin:26px -24px 22px -22px;height:96px;
-  background:linear-gradient(to bottom,var(--s1) 0 25%,var(--s2) 25% 50%,var(--s3) 50% 75%,var(--s4) 75%)}
-.tape__band::after{content:"";position:absolute;right:-1px;top:14%;width:34%;height:72%;background:#121212;border-radius:999px 0 0 999px}
-.tape ul{list-style:none;margin:0;padding:0;font:400 .9rem/1.55 var(--body)}
-.tape li::before{content:"— "}
-.tape__foot{margin-top:auto;padding-top:18px;border-top:1.5px solid rgba(27,22,18,.75);display:flex;justify-content:space-between;align-items:center}
-.tape__price{font:700 30px/1 var(--disp)}
-.tape__go{font:600 .68rem/1 var(--mono);letter-spacing:.14em;padding:11px 14px;background:var(--pink);color:var(--paper)}
-.tape:hover .tape__go{background:var(--s3)}
+/* ---------- плёнка с тарифами ---------- */
+.filmsec{overflow:hidden;padding-left:0;padding-right:0}
+.filmsec .sec__head{padding:0 clamp(18px,4vw,56px)}
+.film{position:relative;transform:rotate(-3deg);margin:40px 0 70px}
+.film__track{display:flex;gap:0;width:max-content;position:relative;left:50%;transform:translateX(calc(-50% + var(--px,0px)));
+  background:#0d0b0a;box-shadow:0 30px 70px -20px rgba(0,0,0,.85),0 0 90px -30px rgba(255,170,100,.35)}
+.holes{position:absolute;left:0;right:0;height:16px;display:flex;gap:16px;padding:0 8px;overflow:hidden;z-index:2}
+.holes--t{top:14px}.holes--b{bottom:14px}
+.holes span{flex:none;width:22px;height:16px;border-radius:4px;background:#f3e2c2;box-shadow:0 0 10px rgba(255,200,130,.55)}
+.edge{position:absolute;left:24px;z-index:2;font:600 10px/1 var(--mono);letter-spacing:.24em;color:#e8913d;white-space:nowrap;opacity:.85}
+.edge--t{top:38px}.edge--b{bottom:38px}
+.fr{position:relative;flex:none;width:clamp(300px,27vw,420px);aspect-ratio:3/2.25;margin:56px 10px;overflow:hidden;background:#1d1714;border-radius:3px}
+.fr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.55) saturate(.9) brightness(.62) contrast(1.05);transition:filter .6s,transform 1.2s}
+.fr::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,11,10,.1),rgba(13,11,10,.82) 70%);pointer-events:none;transition:opacity .5s}
+.fr--photo::after{background:rgba(13,11,10,.15)}
+.fr:hover img{filter:sepia(.3) saturate(1) brightness(.8) contrast(1.05);transform:scale(1.04)}
+.fr__in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;padding:22px 24px;text-align:left}
+.fr__no{position:absolute;top:18px;left:22px;color:var(--amber)}
+.fr__min{position:absolute;top:12px;right:20px;font:800 34px/1 var(--disp);letter-spacing:-.02em;color:rgba(246,236,220,.9)}
+.fr__min small{font:400 .3em var(--mono);letter-spacing:.14em;margin-left:4px}
+.fr h3{margin:0 0 6px;font:600 clamp(17px,1.5vw,22px)/1.15 var(--disp)}
+.fr ul{list-style:none;margin:0 0 14px;padding:0;color:var(--ink2);font-size:.82rem;line-height:1.5}
+.fr li::before{content:"▸ ";color:var(--amber)}
+.fr__foot{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.fr__price{font:800 22px/1 var(--disp)}
 
-/* кадры: линза + свечение */
+/* ---------- кадры ---------- */
 .shots{display:grid;grid-template-columns:1.2fr .9fr 1fr;gap:clamp(14px,2vw,28px);align-items:end;max-width:1280px}
 .shot{margin:0}
 .shot__f{position:relative;aspect-ratio:4/5;overflow:hidden;background:#0a0a0a}
@@ -122,100 +127,70 @@ h1 span{display:block;font-weight:400;font-size:.34em;letter-spacing:.32em;color
 .shot figcaption{display:flex;justify-content:space-between;margin-top:12px;color:var(--mut)}
 .shot figcaption b{color:var(--ink);font-weight:600}
 
-/* система */
+/* ---------- система ---------- */
 .sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;max-width:1280px}
-.card{border:1px solid var(--line);padding:24px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.card{border:1px solid var(--line);padding:24px;background:rgba(18,18,18,.35);backdrop-filter:blur(6px)}
 .card h3{margin:0 0 16px;color:var(--amber)}
 .sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .sw div{aspect-ratio:1;border:1px solid var(--line);display:flex;align-items:flex-end;padding:6px;font:400 9px/1.2 var(--mono);color:var(--ink2)}
-.t1{font:700 54px/1 var(--disp);text-transform:uppercase}
+.t1{font:800 40px/1.1 var(--disp)}
 .t2{font:300 17px/1.6 var(--body);color:var(--ink2);margin:10px 0}
 .t3{color:var(--amber)}
 .note{max-width:1280px;margin-top:60px;color:var(--mut)}
 
 @media (max-width:960px){
-  .hero__in{grid-template-columns:1fr}.tv{order:-1}.links{display:none}
-  .tapes,.shots{grid-template-columns:1fr}.tape{min-height:0;--r:0deg!important}
-  .hero{padding-top:100px}
+  .links{display:none}
+  .shots{grid-template-columns:1fr}
+  .film{transform:rotate(-2deg)}
+  .film__track{left:0;transform:none}
+  .film__scroll{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .film__scroll::-webkit-scrollbar{display:none}
+  .fr{width:78vw;scroll-snap-align:center}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div class="bgm" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <div class="fx fx--vig"></div><div class="fx fx--grain"></div><canvas id="dust" aria-hidden="true"></canvas>
 
+<main>
 <header class="hero" id="hero">
-  <div class="glow" id="glow"></div>
   <nav class="top">
-    <span class="logo">PLЁNKA<small>grunge cinema · spb</small></span>
+    <span class="logo glow" data-t="PLЁNKA">PLЁNKA</span>
     <div class="links mono"><a href="#">Обо мне</a><a href="#">Архив</a><a href="#tapes">Тарифы</a><a href="#">Связь</a></div>
-    <span class="mono rec">● REC</span>
   </nav>
-  <div class="hero__in">
-    <div>
-      <p class="mono kicker">Кассета 01 · Санкт-Петербург · с 2018</p>
-      <h1 class="ca">Plёnka<span>studio</span></h1>
-      <p class="lead">Гранж-кино: кадры, похожие на остановленную сцену из фильма — немного холодно, немного тепло и всегда что-то недосказано.</p>
-      <div class="btns"><a class="btn" href="#shots">▶ Смотреть архив</a><a class="btn btn--ghost" href="#tapes">Выбрать кассету</a></div>
-    </div>
-    <figure class="tv">
-      <div class="tv__screen">
-        <div class="tv__img" id="tvImg"></div>
-        <div class="tv__scan"></div><div class="tv__roll"></div>
-        <canvas class="tv__static" id="static" width="160" height="120"></canvas>
-        <div class="tv__vig"></div>
-        <div class="osd osd--tl">PLAY ▶</div><div class="osd osd--tr" id="ch">CH 01</div>
-        <div class="osd osd--bl">SP</div><div class="osd osd--br" id="tc">0:00:00</div>
-      </div>
-      <figcaption class="tv__leg mono"><span>Plёnka · trinitron</span><i></i></figcaption>
-    </figure>
-  </div>
+  <p class="mono kicker">Санкт-Петербург · с 2018</p>
+  <h1 class="glow" data-t="Plёnka">Plёnka</h1>
+  <p class="sub">studio</p>
+  <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <p class="lead">Гранж-кино: кадры, похожие на остановленную сцену из фильма — немного холодно, немного тепло и всегда что-то недосказано.</p>
+  <div class="btns"><a class="key" href="#shots"><b></b>Смотреть архив</a><a class="key key--dark" href="#tapes"><b></b>Тарифы</a></div>
   <span class="scroll mono">▼ перемотка</span>
 </header>
 
-<section class="sec" id="tapes">
-  <div class="sec__head"><h2 class="ca">Выберите<br>кассету</h2><p>Тарифы как обложки VHS: тёплая бумага, полосы, потёртости. Наведи — кассета выпрямится и подсветится.</p></div>
-  <div class="tapes">
-    <article class="tape"><div class="tape__spine"><i></i><b>PLЁNKA · 01</b><i></i></div>
-      <div class="tape__top"><span class="tape__brand">PLЁNKA.</span><span class="tape__dots"></span></div>
-      <div class="tape__made">Фрагмент</div><div class="tape__num">60<small>мин</small></div>
-      <div class="tape__band"></div>
-      <ul><li>1 зал на выбор</li><li>15 кадров в авторской обработке</li></ul>
-      <div class="tape__foot"><span class="tape__price">4 900 ₽</span><span class="tape__go">▶ ВЫБРАТЬ</span></div>
-    </article>
-    <article class="tape"><div class="tape__spine"><i></i><b>PLЁNKA · 02</b><i></i></div>
-      <div class="tape__top"><span class="tape__brand">PLЁNKA.</span><span class="tape__dots"></span></div>
-      <div class="tape__made">Секвенция</div><div class="tape__num">120<small>мин</small></div>
-      <div class="tape__band"></div>
-      <ul><li>2 зала на выбор</li><li>35 кадров в авторской обработке</li><li>Помощь в поиске визажиста</li></ul>
-      <div class="tape__foot"><span class="tape__price">9 900 ₽</span><span class="tape__go">▶ ВЫБРАТЬ</span></div>
-    </article>
-    <article class="tape"><div class="tape__spine"><i></i><b>PLЁNKA · 03</b><i></i></div>
-      <div class="tape__top"><span class="tape__brand">PLЁNKA.</span><span class="tape__dots"></span></div>
-      <div class="tape__made">Полная синхронизация</div><div class="tape__num">180<small>мин</small></div>
-      <div class="tape__band"></div>
-      <ul><li>3 зала — любой можно сменить на час съёмки</li><li>60 кадров в авторской обработке</li><li>Исходники — по желанию</li></ul>
-      <div class="tape__foot"><span class="tape__price">19 900 ₽</span><span class="tape__go">▶ ВЫБРАТЬ</span></div>
-    </article>
-  </div>
+<section class="sec filmsec" id="tapes">
+  <div class="sec__head"><h2 class="glow" data-t="Тарифы">Тарифы</h2><p>Плёнка на просвет: в каждом кадре — свой тариф. Наведи на кадр — он проявится ярче.</p></div>
+  <div class="film"><div class="film__scroll"><div class="film__track" id="track"></div></div></div>
 </section>
 
 <section class="sec" id="shots">
-  <div class="sec__head"><h2 class="ca">Кадры<br>из архива</h2><p>Лёгкое искажение линзы, хроматическая аберрация по краям и мягкое свечение — как будто смотришь через старый объектив.</p></div>
+  <div class="sec__head"><h2 class="glow" data-t="Кадры из архива">Кадры из архива</h2><p>Лёгкое искажение линзы, хроматическая аберрация по краям и мягкое свечение — как будто смотришь через старый объектив.</p></div>
   <div class="shots" id="shotsGrid"></div>
 </section>
 
 <section class="sec">
-  <div class="sec__head"><h2 class="ca">Система</h2><p>Палитра и шрифты концепта — основа, на которой соберу весь сайт.</p></div>
+  <div class="sec__head"><h2 class="glow" data-t="Система">Система</h2><p>Палитра и шрифты концепта — основа, на которой соберу весь сайт.</p></div>
   <div class="sys">
     <div class="card"><h3 class="mono">Цвет</h3><div class="sw">
-      <div style="background:#121212">121212</div><div style="background:#0d0d0d">0d0d0d</div><div style="background:#efe6d8;color:#121212">efe6d8</div><div style="background:#ffb46a;color:#121212">ffb46a</div>
-      <div style="background:#e9a63c;color:#121212">e9a63c</div><div style="background:#dd6a2a">dd6a2a</div><div style="background:#b7352b">b7352b</div><div style="background:#6f1f2c">6f1f2c</div></div></div>
-    <div class="card"><h3 class="mono">Шрифты</h3><div class="t1 ca">Oswald</div><div class="t2">Manrope — основной текст, мягкий и читаемый.</div><div class="mono t3">IBM Plex Mono — экранные надписи</div></div>
-    <div class="card"><h3 class="mono">Эффекты</h3><div class="t2">Тёплый свет экрана меняет цвет под кадр · пылинки в луче · зерно · виньетка · сканлайны · аберрация · бочкообразная линза · помехи при смене канала.</div></div>
+      <div style="background:#121212">121212</div><div style="background:#f1e7d6;color:#121212">f1e7d6</div><div style="background:#ffb46a;color:#121212">ffb46a</div><div style="background:#3f8f8a">3f8f8a</div>
+      <div style="background:#e9a63c;color:#121212">e9a63c</div><div style="background:#dd6a2a">dd6a2a</div><div style="background:#c23a2c">c23a2c</div><div style="background:#7a2232">7a2232</div></div></div>
+    <div class="card"><h3 class="mono">Шрифты</h3><div class="t1 glow" data-t="Unbounded">Unbounded</div><div class="t2">Manrope — основной текст, мягкий и читаемый.</div><div class="mono t3">IBM Plex Mono — надписи на плёнке</div></div>
+    <div class="card"><h3 class="mono">Эффекты</h3><div class="t2">Свечение и сканлайны на заголовках · едва заметный глитч · живой зернистый фон · пылинки · виньетка · линза и аберрация на фото · плёнка на просвет.</div></div>
   </div>
   <p class="note mono">// концепт · не финальный сайт</p>
 </section>
+</main>
 
 <script>
 (async () => {
@@ -224,8 +199,36 @@ h1 span{display:block;font-weight:400;font-size:.34em;letter-spacing:.32em;color
   let files = ['6e7e54c0fbdb.jpg','6e088201ae7e.jpg','c785ec1403b3.jpg','836a11ecabbd.jpg','a2e212777408.jpg'];
   try { const d = await (await fetch('data/site.json', { cache: 'no-store' })).json(); if (d.slider && d.slider.length) files = d.slider.map((x) => x.file); } catch (e) {}
   const src = (f) => 'photos/site/web/' + f;
+  const ph = (i) => src(files[i % files.length]);
 
-  /* ---------- линза: бочкообразное искажение + хроматическая аберрация (SVG-фильтр) ---------- */
+  /* ---------- плёнка с тарифами ---------- */
+  const TG = 'https://t.me/ph_Plenkaa?text=';
+  const msg = (n) => TG + encodeURIComponent(`Привет! Меня заинтересовал тариф «${n}» на сайте Plёnka Studio — хочу обсудить детали съёмки 📸`);
+  const plans = [
+    { n: 'Фрагмент', m: 60, p: '4 900 ₽', l: ['1 зал на выбор', '15 кадров в авторской обработке'] },
+    { n: 'Секвенция', m: 120, p: '9 900 ₽', l: ['2 зала на выбор', '35 кадров в авторской обработке', 'Помощь в поиске визажиста'] },
+    { n: 'Полная синхронизация', m: 180, p: '19 900 ₽', l: ['3 зала или доп. часы съёмки', '60 кадров в авторской обработке', 'Исходники — по желанию'] },
+  ];
+  const photo = (i) => `<div class="fr fr--photo"><img src="${ph(i)}" alt="" loading="lazy"></div>`;
+  const plan = (x, i) => `<article class="fr"><img src="${ph(i + 1)}" alt="" loading="lazy"><div class="fr__in">
+    <span class="fr__no mono">▸ ${String(i + 12).padStart(2, '0')}A</span><span class="fr__min">${x.m}<small>мин</small></span>
+    <h3>${x.n}</h3><ul>${x.l.map((t) => `<li>${t}</li>`).join('')}</ul>
+    <div class="fr__foot"><span class="fr__price">${x.p}</span><a class="key key--sm" href="${msg(x.n)}" target="_blank" rel="noopener"><b></b>Выбрать</a></div></div></article>`;
+  const track = $('#track');
+  track.innerHTML = '<div class="holes holes--t"></div><div class="holes holes--b"></div>' +
+    '<span class="edge edge--t">PLЁNKA 400 ▸ 10A &nbsp;&nbsp;&nbsp;&nbsp; ▸ 11 &nbsp;&nbsp;&nbsp;&nbsp; PLЁNKA 400 ▸ 12A &nbsp;&nbsp;&nbsp;&nbsp; ▸ 13 &nbsp;&nbsp;&nbsp;&nbsp; PLЁNKA 400 ▸ 14A &nbsp;&nbsp;&nbsp;&nbsp; ▸ 15 &nbsp;&nbsp;&nbsp;&nbsp; PLЁNKA 400 ▸ 16A</span>' +
+    '<span class="edge edge--b">◂ SAFETY FILM &nbsp; 2018 &nbsp;&nbsp;&nbsp;&nbsp; SPB &nbsp;&nbsp;&nbsp;&nbsp; ◂ SAFETY FILM &nbsp; 2018 &nbsp;&nbsp;&nbsp;&nbsp; SPB &nbsp;&nbsp;&nbsp;&nbsp; ◂ SAFETY FILM &nbsp; 2018 &nbsp;&nbsp;&nbsp;&nbsp; SPB</span>' +
+    photo(0) + plans.map(plan).join('') + photo(4);
+  const fillHoles = () => track.querySelectorAll('.holes').forEach((h) => { const n = Math.ceil(track.scrollWidth / 38) + 2; h.innerHTML = '<span></span>'.repeat(n); });
+  fillHoles(); addEventListener('resize', fillHoles);
+  // плёнка медленно протягивается при прокрутке
+  const film = $('.film');
+  const pull = () => { if (innerWidth <= 960) return; const r = film.getBoundingClientRect(), k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; track.style.setProperty('--px', (k * 160).toFixed(1) + 'px'); };
+  if (!reduce) { addEventListener('scroll', pull, { passive: true }); pull(); }
+  // на телефоне начинаем с первого тарифа
+  if (innerWidth <= 960) { const sc = $('.film__scroll'), first = track.querySelector('article'); requestAnimationFrame(() => { sc.scrollLeft = first.offsetLeft - (innerWidth - first.offsetWidth) / 2; }); }
+
+  /* ---------- линза: бочкообразное искажение + хроматическая аберрация ---------- */
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('width', 0); svg.setAttribute('height', 0); svg.style.position = 'absolute';
   document.body.appendChild(svg);
@@ -249,55 +252,29 @@ h1 span{display:block;font-weight:400;font-size:.34em;letter-spacing:.32em;color
     fit(); new ResizeObserver(fit).observe(el); el.style.filter = `url(#${id})`;
   }
 
-  /* ---------- телевизор ---------- */
-  const tv = $('#tvImg');
-  tv.innerHTML = files.map((f, i) => `<img src="${src(f)}" alt="" ${i ? 'loading="lazy"' : ''}>`).join('');
-  const imgs = [...tv.children];
-  lens(tv, .1, .3);
-  const root = document.documentElement.style; let COL = '255,170,110';
-  const tint = (img) => { try { const c = document.createElement('canvas'); c.width = c.height = 12; const x = c.getContext('2d'); x.drawImage(img, 0, 0, 12, 12);
-    const p = x.getImageData(0, 0, 12, 12).data; let r = 0, g = 0, b = 0; for (let i = 0; i < p.length; i += 4) { r += p[i]; g += p[i + 1]; b += p[i + 2]; }
-    const n = p.length / 4; r /= n; g /= n; b /= n; const m = Math.max(r, g, b) || 1;
-    // тёплый свет экрана: цвет кадра, подтянутый к янтарю
-    const R1 = Math.round(255 * .55 + r / m * 255 * .45), G1 = Math.round(170 * .55 + g / m * 230 * .45), B1 = Math.round(110 * .6 + b / m * 200 * .4);
-    root.setProperty('--gr', R1); root.setProperty('--gg', G1); root.setProperty('--gb', B1); COL = `${R1},${G1},${B1}`; } catch (e) {} };
-  const st = $('#static'), sx = st.getContext('2d');
-  const noise = () => { const d = sx.createImageData(160, 120); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } sx.putImageData(d, 0, 0); };
-  let cur = 0;
-  const show = (i) => { cur = (i + imgs.length) % imgs.length; imgs.forEach((im, k) => im.classList.toggle('on', k === cur));
-    $('#ch').textContent = 'CH ' + String(cur + 1).padStart(2, '0'); const im = imgs[cur]; im.complete ? tint(im) : im.addEventListener('load', () => tint(im), { once: true }); };
-  const zap = () => { if (reduce) return show(cur + 1); st.classList.add('on'); let n = 0; const t = setInterval(() => { noise(); if (++n === 6) { clearInterval(t); show(cur + 1); st.classList.remove('on'); } }, 45); };
-  show(0); setInterval(zap, 5200);
-  const t0 = Date.now(); setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000) + 754; $('#tc').textContent = `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; }, 1000);
-
-  // свет экрана ложится на комнату
-  const glow = $('#glow'), tvEl = document.querySelector('.tv'), hero = $('#hero');
-  const place = () => { const a = tvEl.getBoundingClientRect(), h = hero.getBoundingClientRect(); glow.style.left = (a.left - h.left + a.width / 2) + 'px'; glow.style.top = (a.top - h.top + a.height / 2) + 'px'; };
-  place(); addEventListener('resize', place);
-
   /* ---------- кадры ---------- */
   const pick = [files[1], files[3], files[4]].filter(Boolean);
   $('#shotsGrid').innerHTML = pick.map((f, i) => `<figure class="shot"><div class="shot__f" style="--u:url('${src(f)}')"><img src="${src(f)}" alt="" loading="lazy"></div>
     <figcaption class="mono"><b>Vampire Autumn</b><span>REC 0${i + 1}:${14 + i * 7} · SP</span></figcaption></figure>`).join('');
   document.querySelectorAll('.shot__f').forEach((el) => lens(el, .06, .45));
 
-  /* ---------- пылинки в луче ---------- */
+  /* ---------- пылинки в тёплом свете ---------- */
   const cv = $('#dust'), cx = cv.getContext('2d'); let W, H, D = Math.min(devicePixelRatio || 1, 2);
   const rs = () => { W = innerWidth; H = innerHeight; cv.width = W * D; cv.height = H * D; cx.setTransform(D, 0, 0, D, 0, 0); };
   rs(); addEventListener('resize', rs);
   const R = (a, b) => a + Math.random() * (b - a);
-  const P = Array.from({ length: 110 }, (_, i) => ({ x: R(0, innerWidth), y: R(0, innerHeight), z: R(.2, 1), vx: R(-.08, .08), vy: R(-.12, .02), ph: R(0, 6.28), big: i < 9 }));
+  const P = Array.from({ length: 100 }, (_, i) => ({ x: R(0, innerWidth), y: R(0, innerHeight), z: R(.2, 1), vx: R(-.08, .08), vy: R(-.12, .02), ph: R(0, 6.28), big: i < 8 }));
+  const COL = '255,206,160';
   const tick = (t) => {
     cx.clearRect(0, 0, W, H);
-    const a = tvEl.getBoundingClientRect(), gx = a.left + a.width / 2, gy = a.top + a.height / 2, reach = Math.max(W, H) * .75;
-    const col = COL;
+    const gx = W * .3, gy = H * .1, reach = Math.max(W, H) * .95;
     for (const p of P) {
       p.vx += R(-.004, .004); p.vy += R(-.004, .004); p.vx *= .995; p.vy *= .995;
       p.x += p.vx * p.z * 2; p.y += (p.vy - .03) * p.z * 2;
       if (p.y < -20) { p.y = H + 20; p.x = R(0, W); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
-      const d = Math.hypot(p.x - gx, p.y - gy), l = Math.max(0, 1 - d / reach) ** 2, tw = .6 + .4 * Math.sin(t / 900 + p.ph);
-      if (p.big) { const r = 6 + p.z * 12, g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r); g.addColorStop(0, `rgba(${col},${.07 * l * tw})`); g.addColorStop(1, `rgba(${col},0)`); cx.fillStyle = g; cx.beginPath(); cx.arc(p.x, p.y, r, 0, 6.28); cx.fill(); }
-      else { cx.fillStyle = `rgba(${col},${(.05 + .55 * l) * tw * p.z})`; cx.beginPath(); cx.arc(p.x, p.y, .4 + p.z * 1.2, 0, 6.28); cx.fill(); }
+      const d = Math.hypot(p.x - gx, p.y - gy), l = Math.max(0, 1 - d / reach) ** 1.6, tw = .6 + .4 * Math.sin(t / 900 + p.ph);
+      if (p.big) { const r = 6 + p.z * 12, g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r); g.addColorStop(0, `rgba(${COL},${.07 * l * tw})`); g.addColorStop(1, `rgba(${COL},0)`); cx.fillStyle = g; cx.beginPath(); cx.arc(p.x, p.y, r, 0, 6.28); cx.fill(); }
+      else { cx.fillStyle = `rgba(${COL},${(.05 + .5 * l) * tw * p.z})`; cx.beginPath(); cx.arc(p.x, p.y, .4 + p.z * 1.2, 0, 6.28); cx.fill(); }
     }
     if (!reduce) requestAnimationFrame(tick);
   };

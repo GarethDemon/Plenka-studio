@@ -67,19 +67,43 @@
   const film = $('#film'), cards = [...track.querySelectorAll('article')], cnt = $('#filmCount');
   let fi = 0;
   const vis = () => (innerWidth <= 960 ? 1 : 3);
+  const pos = (i) => { const v = vis(), a = cards[i], z = cards[i + v - 1]; return film.clientWidth / 2 - (a.offsetLeft + z.offsetLeft + z.offsetWidth) / 2; };
+  const setX = (x, anim) => { track.style.transition = anim ? 'transform .7s cubic-bezier(.2,.75,.2,1)' : 'none'; track.style.transform = `translateX(${x.toFixed(1)}px)`; };
   const place = (anim = true) => {
     const v = vis(), max = cards.length - v; fi = Math.max(0, Math.min(fi, max));
-    const a = cards[fi], z = cards[fi + v - 1];
-    const mid = (a.offsetLeft + z.offsetLeft + z.offsetWidth) / 2;
-    track.style.transition = anim ? 'transform .7s cubic-bezier(.2,.75,.2,1)' : 'none';
-    track.style.transform = `translateX(${(film.clientWidth / 2 - mid).toFixed(1)}px)`;
+    setX(pos(fi), anim);
     cnt.textContent = v === 1 ? `${pad(fi + 1)} / ${pad(cards.length)}` : `${pad(fi + 1)}–${pad(fi + v)} / ${pad(cards.length)}`;
     document.querySelectorAll('[data-f]').forEach((b) => { b.disabled = (+b.dataset.f < 0 && fi === 0) || (+b.dataset.f > 0 && fi === max); });
   };
   document.querySelectorAll('[data-f]').forEach((b) => b.addEventListener('click', () => { fi += +b.dataset.f; place(); }));
-  let fx0 = null;
-  film.addEventListener('touchstart', (e) => { fx0 = e.touches[0].clientX; }, { passive: true });
-  film.addEventListener('touchend', (e) => { if (fx0 === null) return; const dx = e.changedTouches[0].clientX - fx0; if (Math.abs(dx) > 40) { fi += dx < 0 ? 1 : -1; place(); } fx0 = null; });
+  // свайп: плёнка едет за пальцем, после отпускания доводится до ближайшего тарифа
+  let t0 = null;
+  film.addEventListener('touchstart', (e) => {
+    const p = e.touches[0];
+    t0 = { x: p.clientX, y: p.clientY, base: pos(fi), lo: pos(cards.length - vis()), hi: pos(0), dir: 0, lx: p.clientX, lt: performance.now(), vx: 0 };
+  }, { passive: true });
+  film.addEventListener('touchmove', (e) => {
+    if (!t0) return;
+    const p = e.touches[0], dx = p.clientX - t0.x, dy = p.clientY - t0.y;
+    if (!t0.dir) { if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; t0.dir = Math.abs(dx) > Math.abs(dy) ? 1 : -1; }
+    if (t0.dir < 0) return; // вертикальная прокрутка страницы
+    if (e.cancelable) e.preventDefault();
+    const now = performance.now(); t0.vx = (p.clientX - t0.lx) / Math.max(1, now - t0.lt); t0.lx = p.clientX; t0.lt = now;
+    let x = t0.base + dx;
+    if (x > t0.hi) x = t0.hi + (x - t0.hi) / 3; else if (x < t0.lo) x = t0.lo + (x - t0.lo) / 3; // мягкий упор на краях
+    t0.cur = x; setX(x, false);
+  }, { passive: false });
+  const tEnd = () => {
+    if (!t0) return;
+    if (t0.dir > 0 && t0.cur != null) {
+      const step = cards[1].offsetLeft - cards[0].offsetLeft, moved = (t0.base - t0.cur) / step;
+      let n = Math.round(moved);
+      if (n === 0 && Math.abs(t0.vx) > 0.35) n = t0.vx < 0 ? 1 : -1; // быстрый взмах — на соседний
+      fi += n;
+    }
+    t0 = null; place();
+  };
+  film.addEventListener('touchend', tEnd); film.addEventListener('touchcancel', tEnd);
   place(false); addEventListener('resize', () => place(false)); addEventListener('load', () => place(false));
   if (document.fonts) document.fonts.ready.then(() => place(false));
 })();

@@ -222,3 +222,4 @@ h1{margin:0;font:800 clamp(52px,9.4vw,152px)/1.05 var(--disp);letter-spacing:-.0
 .fr__in{z-index:1}
 @media (max-width:560px){.cont .ct:last-child{grid-column:auto}}
 @media (max-width:1320px) and (min-width:961px){.cont{grid-template-columns:repeat(6,1fr)}.cont .ct{grid-column:span 2}.cont .ct:nth-child(4){grid-column:2/span 2}}
+.film__note b{color:var(--amber);font-weight:600;display:inline-block;margin-bottom:6px}

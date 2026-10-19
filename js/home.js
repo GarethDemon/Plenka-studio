@@ -44,22 +44,27 @@
   window.PLENKA.rebuildBg();
 
   /* ---------- тарифы на плёнке ---------- */
-  const msg = (n) => 'https://t.me/ph_Plenkaa?text=' + encodeURIComponent(`Привет! Меня заинтересовал тариф «${n}» на сайте Plёnka Studio — хочу обсудить детали съёмки 📸`);
+  const tg = (t) => 'https://t.me/ph_Plenkaa?text=' + encodeURIComponent(t);
   const plans = [
-    { n: 'Фрагмент', m: 60, u: 'мин', p: '4 900 ₽', l: ['1 зал на выбор', '15 кадров в авторской обработке'] },
-    { n: 'Секвенция', m: 120, u: 'мин', p: '9 900 ₽', l: ['2 зала на выбор', '35 кадров в авторской обработке', 'Помощь в поиске визажиста — его услуги отдельно'] },
-    { n: 'Полная синхронизация', m: 180, u: 'мин', p: '19 900 ₽', l: ['3 зала — любой можно заменить часом съёмки', '60 кадров в авторской обработке', 'Помощь в поиске визажиста и стилиста', 'Исходники — по желанию'] },
-    { n: 'Предметная', m: '10+', u: 'кадров', p: 'от 590 ₽<small>/кадр</small>', l: ['Белый фон, интерьер или с моделью', 'Для маркетплейсов, каталогов и соцсетей', 'Заказ от 10 кадров'] },
+    { n: 'Короткий метр', s: 'час съёмки · лёгкий старт', m: 60, u: 'мин', p: '4 900 ₽', l: ['1 зал на выбор', '30 кадров в авторской обработке'],
+      t: 'Привет! Хочу снять «Короткий метр» — час съёмки, 30 кадров. Подскажи свободные даты? 🎞' },
+    { n: 'Полный метр', s: 'два часа · целая история', m: 120, u: 'мин', p: '9 900 ₽', l: ['2 зала на выбор', '50 кадров в авторской обработке', 'Помощь в поиске визажиста — его услуги отдельно'],
+      t: 'Привет! Интересует «Полный метр» — 2 часа, 50 кадров. Давай обсудим идею и даты 🎞' },
+    { n: 'Режиссёрская версия', s: 'три часа · всё по максимуму', m: 180, u: 'мин', p: '19 900 ₽', l: ['3 зала — любой можно заменить часом съёмки', '80 кадров в авторской обработке', 'Помощь в поиске визажиста', 'Исходники — по желанию'],
+      t: 'Привет! Хочу «Режиссёрскую версию» — 3 часа, 80 кадров. Расскажу задумку, подскажи свободные даты 🎬' },
+    { n: 'Стоп-кадр', s: 'предметная съёмка', m: '10+', u: 'кадров', p: 'от 590 ₽<small>/кадр</small>', l: ['Белый фон, интерьер или с моделью', 'Для маркетплейсов, каталогов и соцсетей', 'Заказ от 10 кадров'],
+      t: 'Привет! Нужна предметная съёмка («Стоп-кадр»). Расскажу, что за товар и сколько кадров нужно 📦' },
   ];
-  const empty = (k) => `<div class="fr empty"><div class="fr__in"><span class="fr__no mono">▸ ${k}</span></div></div>`;
-  const plan = (x, i) => `<article class="fr"><div class="fr__in"><span class="fr__no mono">▸ ${12 + i}A</span><span class="fr__min">${x.m}<small>${x.u}</small></span>
-    <h3>${x.n}</h3><ul>${x.l.map((t) => `<li>${t}</li>`).join('')}</ul>
-    <div class="fr__foot"><span class="fr__price">${x.p}</span><a class="key key--sm" href="${msg(x.n)}" target="_blank" rel="noopener"><b></b><span>Выбрать</span></a></div></div></article>`;
+  const bg = (i) => `<i class="fr__bg" style="background-image:url('assets/fr/${i}.jpg')"></i>`;
+  const empty = (k, i) => `<div class="fr empty">${bg(i)}<div class="fr__in"><span class="fr__no mono">▸ ${k}</span></div></div>`;
+  const plan = (x, i) => `<article class="fr">${bg(i + 3)}<div class="fr__in"><span class="fr__no mono">▸ ${12 + i}A</span><span class="fr__min">${x.m}<small>${x.u}</small></span>
+    <h3>${x.n}</h3><span class="fr__sub mono">${x.s}</span><ul>${x.l.map((t) => `<li>${t}</li>`).join('')}</ul>
+    <div class="fr__foot"><span class="fr__price">${x.p}</span><a class="key key--sm" href="${tg(x.t)}" target="_blank" rel="noopener"><b></b><span>Выбрать</span></a></div></div></article>`;
   const track = $('#track');
   const edgeT = Array.from({ length: 16 }, (_, i) => `PLЁNKA 400 ▸ ${8 + i}A &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ▸ ${9 + i}`).join(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ');
   const edgeB = Array.from({ length: 16 }, () => '◂ SAFETY FILM &nbsp; 2018 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SPB').join(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ');
   track.innerHTML = `<div class="holes holes--t"></div><div class="holes holes--b"></div><span class="edge edge--t">${edgeT}</span><span class="edge edge--b">${edgeB}</span>` +
-    empty('10A') + empty('11A') + plans.map(plan).join('') + empty('16A') + empty('17A');
+    empty('10A', 1) + empty('11A', 2) + plans.map(plan).join('') + empty('16A', 7) + empty('17A', 8);
   const holes = () => track.querySelectorAll('.holes').forEach((h) => { h.innerHTML = '<span></span>'.repeat(Math.ceil(track.scrollWidth / 42) + 2); });
   holes(); addEventListener('resize', holes);
 

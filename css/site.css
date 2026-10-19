@@ -217,6 +217,6 @@ h1{margin:0;font:800 clamp(52px,9.4vw,152px)/1.05 var(--disp);letter-spacing:-.0
 .fr.empty .fr__bg{opacity:.5}
 .fr:not(.empty):hover .fr__bg{opacity:.85}
 .fr:not(.empty) .fr__no{margin-bottom:clamp(40px,4.2vw,64px)}
-@media (min-width:961px){.fr{aspect-ratio:1/.95}}
+@media (min-width:961px){.fr{aspect-ratio:1/1}}
 .fr__in{z-index:1}
 @media (max-width:560px){.cont .ct:last-child{grid-column:auto}}

@@ -1,3 +1,12 @@
 {
- "galleries": []
+ "galleries": [
+  {
+   "slug": "8008a65eb10da1f2",
+   "title": "Вздор на шоу",
+   "date": "2026-10-19",
+   "cover": "photos/8008a65eb10da1f2/068188ac/thumb/8f5316260fb6.jpg",
+   "focus": "50% 30%",
+   "count": 64
+  }
+ ]
 }

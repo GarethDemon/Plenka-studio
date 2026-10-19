@@ -1,6 +1,22 @@
 {
  "galleries": [
   {
+   "slug": "d9d891dffa4fbe87",
+   "title": "«Икар»",
+   "date": "2024-10-06",
+   "cover": "photos/d9d891dffa4fbe87/1a4be88c/thumb/d327ffcfacb2.jpg",
+   "focus": "50% 84%",
+   "count": 20
+  },
+  {
+   "slug": "37f8a4156ac642e5",
+   "title": "Dont Starve",
+   "date": "2026-10-19",
+   "cover": "photos/37f8a4156ac642e5/cd36041b/thumb/9d9011e537e1.jpg",
+   "focus": "53% 29%",
+   "count": 28
+  },
+  {
    "slug": "74e598694dd50371",
    "title": "Вампирская осень",
    "date": "2026-08-18",
